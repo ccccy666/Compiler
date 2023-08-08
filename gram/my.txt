@@ -1,0 +1,11 @@
+222accept
+222accept
+122Error: Illegal expression at 19,3
+3Error: Define of array is wrong at 11,14
+11accept
+32Error: Type is wrong at 14,4
+4accept
+41Error: Illegal expression at 14,12
+4accept
+1Error: Illegal expression at 12,14
+3Error: Define of array is wrong at 12,18

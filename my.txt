@@ -1,0 +1,16 @@
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+Error: Type of return is wrong at 14,8
+accept
+Error: Illegal expression at 16,4
+accept
+Error: Name of Constuctor A is wrong at 10,0
+accept
+Error: Return of function b is wrong at 13,4
+accept
+Error: Name of Constuctor B is wrong at 11,0
