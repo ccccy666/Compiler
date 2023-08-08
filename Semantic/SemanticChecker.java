@@ -341,11 +341,20 @@ public class SemanticChecker implements ASTvisitor {
     if (node.lhs.type == null ||node.mhs.type==null ||node.rhs.type == null){//type不存在
       throw new Error(node.pos, "Illegal expression");
     }
-    if(!node.lhs.type.equals(new TypeNode("bool")) || !(node.mhs.type.equals(node.rhs.type))){
+    if(!node.lhs.type.equals(new TypeNode("bool"))  ){
       throw new Error(node.pos,"Type is wrong");
 
     }
-    node.type=node.mhs.type;
+    if(!node.mhs.type.equals(node.rhs.type)) {
+      if(((!node.rhs.type.Nbasic()||!node.mhs.type.equals(new TypeNode("null")))&&(!node.mhs.type.Nbasic()||!node.rhs.type.equals(new TypeNode("null"))))){
+        throw new Error(node.pos,"Type is wrong");
+      }
+      
+    }
+    if(node.mhs.type.equals(new TypeNode("null"))){
+      node.type=node.rhs.type;
+    }else node.type=node.mhs.type;
+    
 
   };
   public void visit(SufexprNode node){
