@@ -116,6 +116,15 @@ public class SemanticChecker implements ASTvisitor {
       }
     }
     
+    if(currentScope.inclass!=null){//同一作用域变量不能和函数重名
+      if(currentScope.inclass.getFuncDef(node.varName)!=null){
+        throw new Error(node.pos,"Variable can not use the name of function");
+      }
+    }else{
+      if(globalScope.funcMember.get(node.varName)!=null){
+        throw new Error(node.pos,"Variable can not use the name of function");
+      }
+    }
     //todo
     if(currentScope.varMember.containsKey(node.varName)){
       if(currentScope.varMember.get(node.varName).cover==false){
@@ -515,7 +524,7 @@ public class SemanticChecker implements ASTvisitor {
       ele.accept(this);
     }
   };
-  
+
   public void visit(MemberexprNode node){
     // node.
     node.obj.accept(this);

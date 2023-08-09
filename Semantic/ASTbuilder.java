@@ -115,7 +115,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
     if (ctx.Void() != null)
       return new TypeNode(new Position(ctx), ctx.getText());
     else
-      return  new TypeNode(new Position(ctx), ctx.type().typeName().getText(), ctx.type().LBracket().size());
+      return  new TypeNode(new Position(ctx), ctx.type().typeName().getText(), ctx.type().LeftBracket().size());
   }
   /**
 	 * {@inheritDoc}
@@ -125,7 +125,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 */
   @Override
   public AstNode visitType(MxParser.TypeContext ctx) {
-    return new TypeNode(new Position(ctx), ctx.typeName().getText(), ctx.LBracket().size());
+    return new TypeNode(new Position(ctx), ctx.typeName().getText(), ctx.LeftBracket().size());
   }
   /**
 	 * {@inheritDoc}

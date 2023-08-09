@@ -17,13 +17,13 @@ import java.io.PrintStream;
 
 public class Main {
       public static void main(String[] args) throws Exception {
-        String file = "my.txt";
+        String file = "m.txt";
         PrintStream fileOut = new PrintStream(new FileOutputStream(file));
 
             // 将System.out重定向到文件输出流
         System.setOut(fileOut);
-        for(int i=1;i<=16;i++){
-          String filePath = MessageFormat.format("/home/cyf/compiler/Compiler-Design-Implementation-master/testcases/sema/class-package/class-{0}.mx",i);
+        for(int i=1;i<=72;i++){
+          String filePath = MessageFormat.format("/home/cyf/compiler/Compiler-Design-Implementation-master/testcases/sema/basic-package/basic-{0}.mx",i);
           // String filePath = "path/to/your/file.txt";
           Path path = Paths.get(filePath);
           // 从标准输入流中读取输入
