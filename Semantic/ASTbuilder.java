@@ -37,63 +37,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
       }
     return program;
   }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitFuncDef(MxParser.FuncDefContext ctx) {
-    FuncdefNode funcDef = new FuncdefNode(new Position(ctx), ctx.ID().getText());
-    funcDef.returnType = (TypeNode) visit(ctx.returnType());
-    if (ctx.parameterList() != null)
-      funcDef.params = (ParametersNode) visit(ctx.parameterList());
-    funcDef.stmts = ((ContentstmtNode) visit(ctx.suite())).stmts;
-    return funcDef;
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitReturnType(MxParser.ReturnTypeContext ctx) {
-    if (ctx.Void() != null)
-      return new TypeNode(new Position(ctx), ctx.getText());
-    else
-      return  new TypeNode(new Position(ctx), ctx.type().typeName().getText(), ctx.type().LBracket().size());
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitParameterList(MxParser.ParameterListContext ctx) {
-    ParametersNode parameterList = new ParametersNode(new Position(ctx));
-    for (int i = 0; i < ctx.type().size(); i++)
-      parameterList.units.add(new Variable(new Position(ctx.type(i)),(TypeNode) visit(ctx.type(i)),ctx.ID(i).getText(),null));
-    return parameterList;
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitSuite(MxParser.SuiteContext ctx) {
-    ContentstmtNode suite = new ContentstmtNode(new Position(ctx));
-    List<StatementContext> lis=ctx.statement();
-    for(var ele:lis){
-      suite.stmts.add((StmtNode) visit(ele));
-    }
-    //  ctx.statement().forEach(stmt -> suite.stmts.add((StmtNode) visit(stmt)));
-    return suite;
-  }
+  
   /**
 	 * {@inheritDoc}
 	 *
@@ -152,9 +96,67 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
   @Override
+  public AstNode visitFuncDef(MxParser.FuncDefContext ctx) {
+    FuncdefNode funcDef = new FuncdefNode(new Position(ctx), ctx.ID().getText());
+    funcDef.returnType = (TypeNode) visit(ctx.returnType());
+    if (ctx.parameterList() != null)
+      funcDef.params = (ParametersNode) visit(ctx.parameterList());
+    funcDef.stmts = ((ContentstmtNode) visit(ctx.suite())).stmts;
+    return funcDef;
+  }
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
+  public AstNode visitReturnType(MxParser.ReturnTypeContext ctx) {
+    if (ctx.Void() != null)
+      return new TypeNode(new Position(ctx), ctx.getText());
+    else
+      return  new TypeNode(new Position(ctx), ctx.type().typeName().getText(), ctx.type().LBracket().size());
+  }
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
   public AstNode visitType(MxParser.TypeContext ctx) {
     return new TypeNode(new Position(ctx), ctx.typeName().getText(), ctx.LBracket().size());
   }
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
+  public AstNode visitParameterList(MxParser.ParameterListContext ctx) {
+    ParametersNode parameterList = new ParametersNode(new Position(ctx));
+    for (int i = 0; i < ctx.type().size(); i++)
+      parameterList.units.add(new Variable(new Position(ctx.type(i)),(TypeNode) visit(ctx.type(i)),ctx.ID(i).getText(),null));
+    return parameterList;
+  }
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
+  public AstNode visitSuite(MxParser.SuiteContext ctx) {
+    ContentstmtNode suite = new ContentstmtNode(new Position(ctx));
+    List<StatementContext> lis=ctx.statement();
+    for(var ele:lis){
+      suite.stmts.add((StmtNode) visit(ele));
+    }
+    //  ctx.statement().forEach(stmt -> suite.stmts.add((StmtNode) visit(stmt)));
+    return suite;
+  }
+  
   /**
 	 * {@inheritDoc}
 	 *
@@ -179,21 +181,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
     if (ctx.exprStmt() != null){//expr
       return new ExprstmtNode(new Position(ctx), ctx.exprStmt().expr() == null ? null : (ExprNode) visit(ctx.exprStmt().expr()));
     }
-    if (ctx.ifStmt() != null){
-      MxParser.IfStmtContext Ctx=ctx.ifStmt();
-      IfstmtNode ifStmt = new IfstmtNode(new Position(Ctx), (ExprNode) visit(Ctx.expr()));
-      if (Ctx.statement(0).suite() != null)
-        ifStmt.thenStmts = ((ContentstmtNode) visit(Ctx.statement(0).suite())).stmts;
-      else
-        ifStmt.thenStmts.add((StmtNode) visit(Ctx.statement(0)));
-      if (Ctx.Else() != null) {
-        if (Ctx.statement(1).suite() != null)
-          ifStmt.elseStmts = ((ContentstmtNode) visit(Ctx.statement(1).suite())).stmts;
-        else
-          ifStmt.elseStmts.add((StmtNode) visit(Ctx.statement(1)));
-      }
-      return ifStmt;
-    }      
+      
     if (ctx.forStmt() != null){
       MxParser.ForStmtContext Ctx=ctx.forStmt();
       ForstmtNode forStmt = new ForstmtNode(new Position(Ctx));
@@ -220,7 +208,21 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
         whileStmt.stmts.add((StmtNode) visit(Ctx.statement()));
       return whileStmt;
     }
-     
+    if (ctx.ifStmt() != null){
+      MxParser.IfStmtContext Ctx=ctx.ifStmt();
+      IfstmtNode ifStmt = new IfstmtNode(new Position(Ctx), (ExprNode) visit(Ctx.expr()));
+      if (Ctx.statement(0).suite() != null)
+        ifStmt.thenStmts = ((ContentstmtNode) visit(Ctx.statement(0).suite())).stmts;
+      else
+        ifStmt.thenStmts.add((StmtNode) visit(Ctx.statement(0)));
+      if (Ctx.Else() != null) {
+        if (Ctx.statement(1).suite() != null)
+          ifStmt.elseStmts = ((ContentstmtNode) visit(Ctx.statement(1).suite())).stmts;
+        else
+          ifStmt.elseStmts.add((StmtNode) visit(Ctx.statement(1)));
+      }
+      return ifStmt;
+    }     
     if (ctx.returnStmt() != null){
       return new ReturnstmtNode(new Position(ctx.returnStmt()),
         ctx.returnStmt().expr() == null ? null : (ExprNode) visit(ctx.returnStmt().expr()));//单return或有返回值
@@ -244,8 +246,54 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
   @Override
+  public AstNode visitFuncExpr(MxParser.FuncExprContext ctx) {
+    
+    FuncexprNode funcExpr = new FuncexprNode(new Position(ctx), (ExprNode) visit(ctx.expr()));
+    if (ctx.exprList() != null)
+      funcExpr.args = (ExprlistNode) visit(ctx.exprList());
+    return funcExpr;
+  }
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  
+  
+  @Override
+  public AstNode visitIndexExpr(MxParser.IndexExprContext ctx) {
+    IndexexprNode expr = new IndexexprNode(new Position(ctx), (ExprNode) visit(ctx.expr(0)));
+    List<ExprContext> list=ctx.expr();
+    for(int i=1;i<list.size();i++){
+      expr.indexlist.add((ExprNode) visit(ctx.expr(i)));
+    }
+    
+    expr.str = ctx.getText();
+    return expr;
+  }
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
   public AstNode visitExprStmt(MxParser.ExprStmtContext ctx) {
     return new ExprstmtNode(new Position(ctx), ctx.expr() == null ? null : (ExprNode) visit(ctx.expr()));
+  }
+  
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
+  public AstNode visitAtomExpr(MxParser.AtomExprContext ctx) {
+    ExprNode expr = (ExprNode) visitChildren(ctx); // no need to change
+    expr.str = ctx.getText();
+    return expr;
   }
   /**
 	 * {@inheritDoc}
@@ -280,6 +328,9 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
     
     return newExpr;
   }
+  
+  
+  
   /**
 	 * {@inheritDoc}
 	 *
@@ -287,29 +338,8 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
   @Override
-  public AstNode visitIndexExpr(MxParser.IndexExprContext ctx) {
-    IndexexprNode expr = new IndexexprNode(new Position(ctx), (ExprNode) visit(ctx.expr(0)));
-    List<ExprContext> list=ctx.expr();
-    for(int i=1;i<list.size();i++){
-      expr.indexlist.add((ExprNode) visit(ctx.expr(i)));
-    }
-    
-    expr.str = ctx.getText();
-    return expr;
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitFuncExpr(MxParser.FuncExprContext ctx) {
-    
-    FuncexprNode funcExpr = new FuncexprNode(new Position(ctx), (ExprNode) visit(ctx.expr()));
-    if (ctx.exprList() != null)
-      funcExpr.args = (ExprlistNode) visit(ctx.exprList());
-    return funcExpr;
+  public AstNode visitBinaryExpr(MxParser.BinaryExprContext ctx) {
+    return new BinaryexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),ctx.op.getText(),(ExprNode) visit(ctx.expr(1)));
   }
   /**
 	 * {@inheritDoc}
@@ -322,6 +352,23 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
   public AstNode visitTernaryExpr(MxParser.TernaryExprContext ctx) {
 
     return new TernaryexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),ctx.op1.getText(),(ExprNode) visit(ctx.expr(1)),ctx.op2.getText(),(ExprNode) visit(ctx.expr(2)));
+  }
+  
+  /**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+  @Override
+  public AstNode visitExprList(MxParser.ExprListContext ctx) {
+    ExprlistNode exprList = new ExprlistNode(new Position(ctx));
+    List<ExprContext> list=ctx.expr();
+    for(var ele:list){
+      exprList.exprs.add((ExprNode) visit(ele));
+    }
+    // ctx.expr().forEach(expr -> exprList.exprs.add((ExprNode) visit(expr)));
+    return exprList;
   }
   /**
 	 * {@inheritDoc}
@@ -343,20 +390,8 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
   @Override
-  public AstNode visitAtomExpr(MxParser.AtomExprContext ctx) {
-    ExprNode expr = (ExprNode) visitChildren(ctx); // no need to change
-    expr.str = ctx.getText();
-    return expr;
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitBinaryExpr(MxParser.BinaryExprContext ctx) {
-    return new BinaryexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),ctx.op.getText(),(ExprNode) visit(ctx.expr(1)));
+  public AstNode visitSingle(MxParser.SingleContext ctx) {//基础类型？自定义
+    return ctx.ID() == null ? new BasicexprNode(new Position(ctx), ctx.getText()) : new RecurexprNode(new Position(ctx), ctx.getText());
   }
   /**
 	 * {@inheritDoc}
@@ -398,31 +433,5 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
   @Override
   public AstNode visitParenExpr(MxParser.ParenExprContext ctx) {
     return (ExprNode) visit(ctx.expr());
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitSingle(MxParser.SingleContext ctx) {//基础类型？自定义
-    return ctx.ID() == null ? new BasicexprNode(new Position(ctx), ctx.getText()) : new RecurexprNode(new Position(ctx), ctx.getText());
-  }
-  /**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-  @Override
-  public AstNode visitExprList(MxParser.ExprListContext ctx) {
-    ExprlistNode exprList = new ExprlistNode(new Position(ctx));
-    List<ExprContext> list=ctx.expr();
-    for(var ele:list){
-      exprList.exprs.add((ExprNode) visit(ele));
-    }
-    // ctx.expr().forEach(expr -> exprList.exprs.add((ExprNode) visit(expr)));
-    return exprList;
   }
 }

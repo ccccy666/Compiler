@@ -47,6 +47,30 @@ public class SemanticChecker implements ASTvisitor {
     }//检查返回类型非void的返回值的函数中 每一个return语句 的返回类型是否正确
     currentScope=currentScope.parentScope;
   };
+
+  public void visit(TypeNode node){
+    // System.out.print(node.type);
+    if(!(node.type.equals("int")||node.type.equals("bool")||node.type.equals("string")||node.type.equals("null")||node.type.equals("this")||node.type.equals("void"))){
+      if(!globalScope.classMember.containsKey(node.type)){
+        throw new Error(node.pos,node.type+" does not exist");
+      }
+    }
+  };
+
+  public void visit(ParametersNode node){
+    for(var ele:node.units){
+      ele.accept(this);
+    }
+  };
+
+  public void visit(ContentstmtNode node){
+    currentScope=new Scope(currentScope);
+    for(var ele:node.stmts){
+      ele.accept(this);
+    }
+    currentScope=currentScope.parentScope;
+  };
+
   public void visit(ClassdefNode node){
 
     currentScope = new Scope(currentScope,node);//todo
@@ -67,6 +91,13 @@ public class SemanticChecker implements ASTvisitor {
     }
     currentScope=currentScope.parentScope;
   };
+
+  public void visit(ConstructordefNode node){
+    currentScope=new Scope(currentScope,new TypeNode("void"));
+    node.suite.accept(this);
+    currentScope=currentScope.parentScope;
+  };
+
   public void visit(VariabledefNode node){
     for(var ele:node.units){
       ele.accept(this);
@@ -101,64 +132,14 @@ public class SemanticChecker implements ASTvisitor {
     mi.cover=true;
     currentScope.varMember.put(node.varName,mi);
   };
-  public void visit(ParametersNode node){
-    for(var ele:node.units){
-      ele.accept(this);
+  
+  public void visit(ExprstmtNode node){
+    if(node.expr!=null){
+      node.expr.accept(this);
     }
-  };
-  public void visit(TypeNode node){
-    // System.out.print(node.type);
-    if(!(node.type.equals("int")||node.type.equals("bool")||node.type.equals("string")||node.type.equals("null")||node.type.equals("this")||node.type.equals("void"))){
-      if(!globalScope.classMember.containsKey(node.type)){
-        throw new Error(node.pos,node.type+" does not exist");
-      }
-    }
-  };
-  public void visit(ConstructordefNode node){
-    currentScope=new Scope(currentScope,new TypeNode("void"));
-    node.suite.accept(this);
-    currentScope=currentScope.parentScope;
   };
 
-  public void visit(ContentstmtNode node){
-    currentScope=new Scope(currentScope);
-    for(var ele:node.stmts){
-      ele.accept(this);
-    }
-    currentScope=currentScope.parentScope;
-  };
-  public void visit(IfstmtNode node){
-    node.cond.accept(this);
-    if(!node.cond.type.equals(new TypeNode("bool"))){
-      throw new Error(node.pos,"Type of condition is wrong");
-    }
-    currentScope=new Scope(currentScope);
-    for(var ele:node.thenStmts){
-      ele.accept(this);
-    
-    }
-    currentScope=currentScope.parentScope;
-    if(node.elseStmts!=null){
-      currentScope=new Scope(currentScope);
-    for(var ele:node.elseStmts){
-      ele.accept(this);
-    
-    }
-    currentScope=currentScope.parentScope;
-    }
-  };
-  public void visit(WhilestmtNode node){
-    node.cond.accept(this);
-    if(!node.cond.type.equals(new TypeNode("bool"))){
-      throw new Error(node.pos,"Type of condition is wrong");
-    }
-    currentScope=new Scope(currentScope,true);
-    for(var ele:node.stmts){
-      ele.accept(this);
-    
-    }
-    currentScope=currentScope.parentScope;
-  };
+  
   public void visit(ForstmtNode node){///////////////
     
 
@@ -185,16 +166,32 @@ public class SemanticChecker implements ASTvisitor {
     }
     currentScope=currentScope.parentScope;
   };
-  public void visit(ContinuestmtNode node){
-    if(!currentScope.circle){
-      throw new Error(node.pos,"Can not use continue while not in a circle");
+
+  public void visit(WhilestmtNode node){
+    node.cond.accept(this);
+    if(!node.cond.type.equals(new TypeNode("bool"))){
+      throw new Error(node.pos,"Type of condition is wrong");
     }
+    currentScope=new Scope(currentScope,true);
+    for(var ele:node.stmts){
+      ele.accept(this);
+    
+    }
+    currentScope=currentScope.parentScope;
   };
+
   public void visit(BreakstmtNode node){
     if(!currentScope.circle){
       throw new Error(node.pos,"Can not use break while not in a circle");
     }
   };
+
+  public void visit(ContinuestmtNode node){
+    if(!currentScope.circle){
+      throw new Error(node.pos,"Can not use continue while not in a circle");
+    }
+  };
+  
   public void visit(ReturnstmtNode node){
     
     for (Scope theScope = currentScope; theScope != null; theScope = theScope.parentScope){
@@ -232,11 +229,29 @@ public class SemanticChecker implements ASTvisitor {
       
     throw new Error(node.pos, "Not return in function");
   };
-  public void visit(ExprstmtNode node){
-    if(node.expr!=null){
-      node.expr.accept(this);
+
+  public void visit(IfstmtNode node){
+    node.cond.accept(this);
+    if(!node.cond.type.equals(new TypeNode("bool"))){
+      throw new Error(node.pos,"Type of condition is wrong");
+    }
+    currentScope=new Scope(currentScope);
+    for(var ele:node.thenStmts){
+      ele.accept(this);
+    
+    }
+    currentScope=currentScope.parentScope;
+    if(node.elseStmts!=null){
+      currentScope=new Scope(currentScope);
+    for(var ele:node.elseStmts){
+      ele.accept(this);
+    
+    }
+    currentScope=currentScope.parentScope;
     }
   };
+
+  
 
   public void visit(BasicexprNode node){//int,bool,string,null,this
     // System.out.print(node.str);
@@ -420,30 +435,7 @@ public class SemanticChecker implements ASTvisitor {
     node.type = node.lhs.type;
     
   };
-  public void visit(FuncexprNode node){
-    node.funcName.accept(this);
-    if (node.funcName.funcDef == null)
-      throw new Error(node.pos, "Function " + node.funcName.str + " does not exist");
-    FuncdefNode func = node.funcName.funcDef;
-    if (node.args != null) {
-      node.args.accept(this);
-      int num=node.args.exprs.size();
-      if (func.params == null || func.params.units.size() != node.args.exprs.size())
-        throw new Error(node.pos, "Number of Parameters is wrong");
-      for (int i = 0; i < num; i++) {//逐项检查参数
-        ExprNode arg = node.args.exprs.get(i);
-        Variable param = func.params.units.get(i);
-        
-        if (judge(param.type,arg.type))
-          throw new Error(node.pos, "Parameter type is wrong");
-      }
-    } else if (func.params != null){
-      
-        throw new Error(node.pos, "Number of Parameters is wrong");
-    }
-    node.type = func.returnType;
-  };
-  
+
   public void visit(IndexexprNode node){/////////////
     node.array.accept(this);//数组名
     // node.index.accept(this);//下标
@@ -478,6 +470,52 @@ public class SemanticChecker implements ASTvisitor {
     }
      
   };
+
+  public void visit(FuncexprNode node){
+    node.funcName.accept(this);
+    if (node.funcName.funcDef == null)
+      throw new Error(node.pos, "Function " + node.funcName.str + " does not exist");
+    FuncdefNode func = node.funcName.funcDef;
+    if (node.args != null) {
+      node.args.accept(this);
+      int num=node.args.exprs.size();
+      if (func.params == null || func.params.units.size() != node.args.exprs.size())
+        throw new Error(node.pos, "Number of Parameters is wrong");
+      for (int i = 0; i < num; i++) {//逐项检查参数
+        ExprNode arg = node.args.exprs.get(i);
+        Variable param = func.params.units.get(i);
+        
+        if (judge(param.type,arg.type))
+          throw new Error(node.pos, "Parameter type is wrong");
+      }
+    } else if (func.params != null){
+      
+        throw new Error(node.pos, "Number of Parameters is wrong");
+    }
+    node.type = func.returnType;
+  };
+  
+  public void visit(NewexprNode node){
+    // node.
+    TypeNode tmp=new TypeNode(node.pos, node.typeName);
+    tmp.accept(this);
+    for (var ele : node.sizeList) {
+      ele.accept(this);
+      if (ele.type == null || !ele.type.equals((new TypeNode("int")))){
+        throw new Error(node.pos, "Illegal expression");
+      }
+        
+    }
+    
+    node.type = new TypeNode(null,node.typeName, node.dim);
+  };
+
+  public void visit(ExprlistNode node){
+    for(var ele:node.exprs){
+      ele.accept(this);
+    }
+  };
+  
   public void visit(MemberexprNode node){
     // node.
     node.obj.accept(this);
@@ -506,26 +544,9 @@ public class SemanticChecker implements ASTvisitor {
       
     }
   };  
-  public void visit(NewexprNode node){
-    // node.
-    TypeNode tmp=new TypeNode(node.pos, node.typeName);
-    tmp.accept(this);
-    for (var ele : node.sizeList) {
-      ele.accept(this);
-      if (ele.type == null || !ele.type.equals((new TypeNode("int")))){
-        throw new Error(node.pos, "Illegal expression");
-      }
-        
-    }
-    
-    node.type = new TypeNode(null,node.typeName, node.dim);
-  };
   
-  public void visit(ExprlistNode node){
-    for(var ele:node.exprs){
-      ele.accept(this);
-    }
-  };
+  
+  
 }
 
 

@@ -2,8 +2,7 @@ package utils;
 
 import java.util.HashMap;
 
-// import IR.*;
-// import IR.entity.*;
+
 import ast.*;
 import ast.stmt.*;
 import utils.*;
@@ -18,9 +17,7 @@ public class Scope {
   public TypeNode returnType = null;//函数返回类型 
   public boolean circle = false, isReturned = false;
   
-//   public HashMap<String, IRRegister> IRVarMember = new HashMap<>();
-//   public HashMap<String, IRFunction> IRFuncMember = new HashMap<>();
-  // public HashMap<String, IRRegister> IRStringConst = new HashMap<>();
+
 
   public Scope() {}
   public Scope(Scope parentScope) {
@@ -55,12 +52,7 @@ public class Scope {
     this.circle = isLoopScope;
   }
 
-  // public void addVar(String name, TypeNode type) {
-  //   varMember.put(name, type);
-  // }
-  // public boolean hasVarInThisScope(String name) {
-  //   return varMember.containsKey(name);
-  // }
+  
   public TypeNode getVarType(String name) {
     if (varMember.containsKey(name))
       return varMember.get(name).typ;
