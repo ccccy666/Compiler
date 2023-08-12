@@ -80,6 +80,11 @@ public class IRbuilder implements ASTvisitor{
                 node.rhs.accept(this);
                 break;
         }
+        Register dest=null;
+        Base operation=null;
+        if(node.type.equals(new TypeNode("string"))){
+            
+        }
         
     };
     @Override
