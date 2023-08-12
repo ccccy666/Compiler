@@ -3,10 +3,11 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import gram.MxParser.*;
 import gram.*;
 import ast.*;
 import utils.*;
-import utils.Error;
+
 import Semantic.*;
 // import java.io.BufferedReader;
 // import java.nio.file.Path;
@@ -37,22 +38,20 @@ public class Compiler {
           lexer.removeErrorListeners();
           lexer.addErrorListener(new Mxerrorlistener());
 
-          
           CommonTokenStream tokens = new CommonTokenStream(lexer);
-
+          
           
           MxParser parser = new MxParser(tokens);
           // HelloParser parser = new HelloParser(tokens);
           parser.removeErrorListeners();
           parser.addErrorListener(new Mxerrorlistener());
-
+          
           
           ParseTree tree = parser.program();
-      
           ASTbuilder astBuilder = new ASTbuilder();
-          ProgramNode ast = (ProgramNode) astBuilder.visit(tree);
+          ProgramNode ast = (ProgramNode) astBuilder.visitProgram((ProgramContext)tree);
           
-          // if(tree==null) {
+          // if(ast==null) {
           //   System.out.println("null");
           //   return ;
           // }
