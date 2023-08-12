@@ -7,14 +7,14 @@ import ast.stmt.*;
 import utils.*;
 import utils.Error;
 
-public class SymbolCollector implements ASTvisitor {//class和func的重名
+public class SymbolCollector implements ASTvisitor {
   private Globalscope globalScope;
 
   public SymbolCollector(Globalscope globalScope) {
     this.globalScope = globalScope;
   }
   public void visit(ProgramNode node) {
-    //deflist在建ast时加进了各种Node
+    
     for(var ele:node.defList){
       ele.accept(this);
     }

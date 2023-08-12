@@ -225,7 +225,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
     }     
     if (ctx.returnStmt() != null){
       return new ReturnstmtNode(new Position(ctx.returnStmt()),
-        ctx.returnStmt().expr() == null ? null : (ExprNode) visit(ctx.returnStmt().expr()));//单return或有返回值
+        ctx.returnStmt().expr() == null ? null : (ExprNode) visit(ctx.returnStmt().expr()));
     }
       
     if (ctx.breakStmt() != null){
@@ -291,7 +291,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 */
   @Override
   public AstNode visitAtomExpr(MxParser.AtomExprContext ctx) {
-    ExprNode expr = (ExprNode) visitChildren(ctx); // no need to change
+    ExprNode expr = (ExprNode) visitChildren(ctx); 
     expr.str = ctx.getText();
     return expr;
   }

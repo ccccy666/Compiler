@@ -33,7 +33,7 @@ public class SemanticChecker implements ASTvisitor {
   public void visit(FuncdefNode node){
     node.returnType.accept(this);
     // System.out.print(currentScope.inclass.name);
-    currentScope = new Scope(currentScope,node.returnType);//需要保存该函数返回值类型
+    currentScope = new Scope(currentScope,node.returnType);//
     // System.out.print(currentScope.inclass.name);
     if(node.params!=null){
       node.params.accept(this);
@@ -44,7 +44,7 @@ public class SemanticChecker implements ASTvisitor {
     if(!node.name.equals("main")&&!node.returnType.equals(new TypeNode("void")) && !currentScope.isReturned){
       throw new Error(node.pos,"Return of function "+node.name+" is wrong");
       
-    }//检查返回类型非void的返回值的函数中 每一个return语句 的返回类型是否正确
+    }//
     currentScope=currentScope.parentScope;
   };
 
@@ -73,14 +73,14 @@ public class SemanticChecker implements ASTvisitor {
 
   public void visit(ClassdefNode node){
 
-    currentScope = new Scope(currentScope,node);//todo
+    currentScope = new Scope(currentScope,node);//
     // System.out.print(currentScope.inclass.name);
     for(var ele:node.varDefList){
       ele.accept(this);
     }
     // System.out.print(currentScope.varMember.get("a").typ.type);
     if(node.classBuild!=null){
-      if(!node.name.equals(node.classBuild.name)){//名字不匹配
+      if(!node.name.equals(node.classBuild.name)){//
         throw new Error(node.pos,"Name of Constuctor "+node.name+" is wrong");
       }else{
         node.classBuild.accept(this);
@@ -110,7 +110,7 @@ public class SemanticChecker implements ASTvisitor {
       }
     }
     
-    if(currentScope.inclass!=null){//同一作用域变量不能和函数重名
+    if(currentScope.inclass!=null){//
       if(currentScope.inclass.getFuncDef(node.varName)!=null){
         throw new Error(node.pos,"Variable can not use the name of function");
       }
@@ -204,7 +204,7 @@ public class SemanticChecker implements ASTvisitor {
   public void visit(ReturnstmtNode node){
     
     for (Scope theScope = currentScope; theScope != null; theScope = theScope.parentScope){
-      if (theScope.returnType != null) {//找到函数层
+      if (theScope.returnType != null) {//
         if (node.expr != null) {
           node.expr.accept(this);
           if(node.expr.type==null){
@@ -287,10 +287,10 @@ public class SemanticChecker implements ASTvisitor {
   public void visit(BinaryexprNode node){
     node.lhs.accept(this);
     node.rhs.accept(this);
-    if (node.lhs.type == null || node.rhs.type == null){//type不存在
+    if (node.lhs.type == null || node.rhs.type == null){//
       throw new Error(node.pos, "Illegal expression");
     }
-    //type为void
+    //
     if ((new TypeNode("void")).equals(node.lhs.type) || (new TypeNode("void")).equals(node.rhs.type)){
       throw new Error(node.pos, "Illegal expression");
     }
@@ -302,7 +302,7 @@ public class SemanticChecker implements ASTvisitor {
       } else if (!node.lhs.type.equals(node.rhs.type)) {
         throw new Error(node.pos, "Illegal expression");
       }
-    }//type为null
+    }
     
     
     if (!node.lhs.type.equals(node.rhs.type))
@@ -349,7 +349,7 @@ public class SemanticChecker implements ASTvisitor {
     node.lhs.accept(this);
     node.mhs.accept(this);
     node.rhs.accept(this);
-    if (node.lhs.type == null ||node.mhs.type==null ||node.rhs.type == null){//type不存在
+    if (node.lhs.type == null ||node.mhs.type==null ||node.rhs.type == null){
       throw new Error(node.pos, "Illegal expression");
     }
     if(!node.lhs.type.equals(new TypeNode("bool"))  ){
@@ -402,7 +402,7 @@ public class SemanticChecker implements ASTvisitor {
       if (!node.expr.type.equals((new TypeNode("int"))) ||!node.expr.isLeftValue() )
         throw new Error(node.pos, "Type of value is wrong");
       node.type = (new TypeNode("int"));
-    } else {//~或者-
+    } else {//
       if (!node.expr.type.equals((new TypeNode("int"))))
         throw new Error(node.pos, "Type should be int");
       node.type = (new TypeNode("int"));
@@ -432,7 +432,7 @@ public class SemanticChecker implements ASTvisitor {
     } 
     if (judge(node.lhs.type,node.rhs.type)){
       throw new Error(node.pos, "Type is wrong");
-    }//右边不是null或者左边是基础类
+    }//
     // System.out.print(node.lhs.type.dim);
     // System.out.print(node.rhs.type.dim);
     if(!node.rhs.type.equals(new TypeNode("null"))&&node.lhs.type.dim!=node.rhs.type.dim){
@@ -447,8 +447,8 @@ public class SemanticChecker implements ASTvisitor {
   };
 
   public void visit(IndexexprNode node){/////////////
-    node.array.accept(this);//数组名
-    // node.index.accept(this);//下标
+    node.array.accept(this);
+    // node.index.accept(this);
     ExprNode ex1=node.array;
     // System.out.print(ex1.str );
     // System.out.print(ex1.type.dim );
@@ -491,7 +491,7 @@ public class SemanticChecker implements ASTvisitor {
       int num=node.args.exprs.size();
       if (func.params == null || func.params.units.size() != node.args.exprs.size())
         throw new Error(node.pos, "Number of Parameters is wrong");
-      for (int i = 0; i < num; i++) {//逐项检查参数
+      for (int i = 0; i < num; i++) {
         ExprNode arg = node.args.exprs.get(i);
         Variable param = func.params.units.get(i);
         
@@ -533,7 +533,7 @@ public class SemanticChecker implements ASTvisitor {
       throw new Error(node.pos, "Illegal expression");
     if (!node.obj.type.Nbasic() && !"this".equals(node.obj.str) && !(new TypeNode("string")).equals(node.obj.type)){
       throw new Error(node.pos, "Type is error");
-    }//只有类，数组，this,string有成员
+    }
     ClassdefNode classDef = "this".equals(node.obj.str)? currentScope.inclass: globalScope.classMember.get(node.obj.type.type);
 
     if (node.obj.type.dim==0 ) {
@@ -548,7 +548,7 @@ public class SemanticChecker implements ASTvisitor {
       if (classDef == null){
         throw new Error(node.pos, "Type is wrong");
       }
-      else if (node.member.equals("size")){//内置的函数size
+      else if (node.member.equals("size")){
         node.funcDef = new FuncdefNode(null, new TypeNode("int"), "size", null, 0);
       }
       

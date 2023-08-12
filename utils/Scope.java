@@ -9,12 +9,12 @@ import utils.*;
 
 
 public class Scope {
-  // public HashMap<String, TypeNode> prevarMember = new HashMap<>();//变量
-  public HashMap<String, midvar> varMember = new HashMap<>();//变量
+  // public HashMap<String, TypeNode> prevarMember = new HashMap<>();
+  public HashMap<String, midvar> varMember = new HashMap<>();
   public Scope parentScope = null;
-  public ClassdefNode inclass = null;//在类中
+  public ClassdefNode inclass = null;
   public circle incircle = null;
-  public TypeNode returnType = null;//函数返回类型 
+  public TypeNode returnType = null;
   public boolean circle = false, isReturned = false;
   
 

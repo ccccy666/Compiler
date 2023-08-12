@@ -10,9 +10,9 @@ public class Globalscope extends Scope  {
   
 
   public Globalscope() {
-    //内置类型
+    
     ClassdefNode stringDef = new ClassdefNode(null, "string");
-    //string的内置函数
+    
     stringDef.funcMember.put("length", new FuncdefNode(null, new TypeNode("int"), "length", "string", null, 0));
     stringDef.funcMember.put("substring", new FuncdefNode(null, new TypeNode("string"), "substring", "string", new TypeNode("int"), 2));
     stringDef.funcMember.put("parseInt", new FuncdefNode(null, new TypeNode("int"), "parseInt", "string", null, 0));
@@ -21,7 +21,7 @@ public class Globalscope extends Scope  {
     classMember.put("string", stringDef);
     classMember.put("int", new ClassdefNode(null, "int"));
     classMember.put("bool", new ClassdefNode(null, "bool"));
-    // 内置函数
+    
     funcMember.put("print", new FuncdefNode(null, new TypeNode("void"), "print", new TypeNode("string"), 1));
     funcMember.put("println", new FuncdefNode(null, new TypeNode("void"), "println", new TypeNode("string"), 1));
     funcMember.put("printInt", new FuncdefNode(null, new TypeNode("void"), "printInt", new TypeNode("int"), 1));
