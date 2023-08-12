@@ -14,7 +14,9 @@ public class SymbolCollector implements ASTvisitor {
     this.globalScope = globalScope;
   }
   public void visit(ProgramNode node) {
-    
+    if(node.defList==null){
+      return;
+    }
     for(var ele:node.defList){
       ele.accept(this);
     }

@@ -31,7 +31,7 @@ public class Compiler {
           // Path path = Paths.get(filePath);
           
           CharStream input = CharStreams.fromStream(System.in);
-          try{
+          
            
           MxLexer lexer = new MxLexer(input);
           lexer.removeErrorListeners();
@@ -52,17 +52,22 @@ public class Compiler {
           ASTbuilder astBuilder = new ASTbuilder();
           ProgramNode ast = (ProgramNode) astBuilder.visit(tree);
           
+          // if(tree==null) {
+          //   System.out.println("null");
+          //   return ;
+          // }
+
           Globalscope globalScope = new Globalscope();
           SymbolCollector collector=new SymbolCollector(globalScope);
           collector.visit(ast);
           SemanticChecker checker=new SemanticChecker(globalScope);
           checker.visit(ast);
           System.out.print("0\n");
-          }catch(Error e){
-            System.out.print(e.toString());
-            System.out.print('\n');
+          // }catch(Error e){
+          //   System.out.print(e.toString());
+          //   System.out.print('\n');
 
-          }
+          // }
         // }
         
 

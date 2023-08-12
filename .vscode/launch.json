@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Compiler",
+            "request": "launch",
+            "mainClass": "Compiler",
+            "projectName": "compiler_96e7b3ff"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
