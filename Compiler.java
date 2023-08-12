@@ -23,35 +23,35 @@ public class Compiler {
         // String line;
         // String file = "my.txt";
         // PrintStream fileOut = new PrintStream(new FileOutputStream(file));
-        // 将System.out重定向到文件输出流
+        
         // System.setOut(fileOut);
         // while ((line = reader.readLine()) != null) {
           // String filePath = MessageFormat.format("/home/cyf/compiler/Compiler-Design-Implementation-master/testcases/sema{0}",line);
           // // String filePath = "path/to/your/file.txt";
           // Path path = Paths.get(filePath);
-          // 从标准输入流中读取输入
+          
           CharStream input = CharStreams.fromStream(System.in);
           try{
-            // 创建词法分析器
+           
           MxLexer lexer = new MxLexer(input);
           lexer.removeErrorListeners();
           lexer.addErrorListener(new Mxerrorlistener());
 
-          // 创建词法符号流
+          
           CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-          // 创建语法解析器
+          
           MxParser parser = new MxParser(tokens);
           // HelloParser parser = new HelloParser(tokens);
           parser.removeErrorListeners();
           parser.addErrorListener(new Mxerrorlistener());
 
-          // 解析给定的规则名称
+          
           ParseTree tree = parser.program();
       
           ASTbuilder astBuilder = new ASTbuilder();
           ProgramNode ast = (ProgramNode) astBuilder.visit(tree);
-          //进行semantic check
+          
           Globalscope globalScope = new Globalscope();
           SymbolCollector collector=new SymbolCollector(globalScope);
           collector.visit(ast);
