@@ -1,5 +1,5 @@
 # Change the src to the path of your java source files
-JAVA_SRC = $(shell find . -name '*.java')
+JAVA_SRC = $(shell find src -name '*.java')
 # Change this to the path of your antlr jar
 ANTLR_JAR = /home/cyf/compiler/antlr-4.9.3-complete.jar
 
@@ -16,7 +16,7 @@ Compiler: $(JAVA_SRC) antlr-parser
 # replace the antlr4 command with your own
 .PHONY: antlr-parser
 antlr-parser: $(ANTLR_G4)
-	antlr4 $^ -visitor -listener -package grammar
+	antlr4 $^ -visitor -listener -package gram
 
 .PHONY: clean
 clean:

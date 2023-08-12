@@ -1,5 +1,5 @@
 grammar Mx;
-@header { package gram; }
+
 program: (funcDef | classDef | varDef)* EOF;
 
 funcDef: returnType ID '(' parameterList? ')' '{' suite '}';
