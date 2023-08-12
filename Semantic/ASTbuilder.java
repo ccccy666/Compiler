@@ -186,14 +186,14 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
       MxParser.ForStmtContext Ctx=ctx.forStmt();
       ForstmtNode forStmt = new ForstmtNode(new Position(Ctx));
       
-      if (Ctx.forInit().varDef() != null)//初始化
+      if (Ctx.forInit().varDef() != null)
         forStmt.varDef = (VariabledefNode) visit(Ctx.forInit().varDef());
       else
         forStmt.init = ((ExprstmtNode) visit(Ctx.forInit().exprStmt())).expr;
-      forStmt.cond = ((ExprstmtNode) visit(Ctx.exprStmt())).expr;//退出条件
-      if (Ctx.expr() != null)//参数修改
+      forStmt.cond = ((ExprstmtNode) visit(Ctx.exprStmt())).expr;
+      if (Ctx.expr() != null)
         forStmt.step = (ExprNode) visit(Ctx.expr());
-      if (Ctx.statement().suite() != null)//循环操作
+      if (Ctx.statement().suite() != null)
         forStmt.stmts = ((ContentstmtNode) visit(Ctx.statement().suite())).stmts;
       else
         forStmt.stmts.add((StmtNode) visit(Ctx.statement()));

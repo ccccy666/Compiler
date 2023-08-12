@@ -5,8 +5,8 @@ import java.util.HashMap;
 import ast.*;
 
 public class Globalscope extends Scope  {
-  public HashMap<String, ClassdefNode> classMember = new HashMap<>();//类
-  public HashMap<String, FuncdefNode> funcMember = new HashMap<>();//函数
+  public HashMap<String, ClassdefNode> classMember = new HashMap<>();
+  public HashMap<String, FuncdefNode> funcMember = new HashMap<>();
   
 
   public Globalscope() {
