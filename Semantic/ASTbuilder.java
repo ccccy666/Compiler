@@ -390,7 +390,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
   @Override
-  public AstNode visitSingle(MxParser.SingleContext ctx) {//基础类型？自定义
+  public AstNode visitSingle(MxParser.SingleContext ctx) {
     return ctx.ID() == null ? new BasicexprNode(new Position(ctx), ctx.getText()) : new RecurexprNode(new Position(ctx), ctx.getText());
   }
   /**
