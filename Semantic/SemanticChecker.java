@@ -97,12 +97,6 @@ public class SemanticChecker implements ASTvisitor {
     node.suite.accept(this);
     currentScope=currentScope.parentScope;
   };
-
-  public void visit(VariabledefNode node){
-    for(var ele:node.units){
-      ele.accept(this);
-    }
-  };
   public void visit(Variable node){
     node.type.accept(this);
     
@@ -141,6 +135,12 @@ public class SemanticChecker implements ASTvisitor {
     mi.cover=true;
     currentScope.varMember.put(node.varName,mi);
   };
+  public void visit(VariabledefNode node){
+    for(var ele:node.units){
+      ele.accept(this);
+    }
+  };
+  
   
   public void visit(ExprstmtNode node){
     if(node.expr!=null){
@@ -284,19 +284,6 @@ public class SemanticChecker implements ASTvisitor {
       
     }
   };
-  public void visit(RecurexprNode node){
-    midvar mi=currentScope.varMember.get(node.str);
-    if(mi==null){
-      node.type=null;
-
-    }
-    else node.type=mi.typ;
-     
-    if (currentScope.inclass != null && currentScope.inclass.funcMember.get(node.str) != null)
-      node.funcDef = currentScope.inclass.funcMember.get(node.str);
-    else
-      node.funcDef = globalScope.funcMember.get(node.str);
-  };
   public void visit(BinaryexprNode node){
     node.lhs.accept(this);
     node.rhs.accept(this);
@@ -381,6 +368,20 @@ public class SemanticChecker implements ASTvisitor {
     
 
   };
+  public void visit(RecurexprNode node){
+    midvar mi=currentScope.varMember.get(node.str);
+    if(mi==null){
+      node.type=null;
+
+    }
+    else node.type=mi.typ;
+     
+    if (currentScope.inclass != null && currentScope.inclass.funcMember.get(node.str) != null)
+      node.funcDef = currentScope.inclass.funcMember.get(node.str);
+    else
+      node.funcDef = globalScope.funcMember.get(node.str);
+  };
+  
   public void visit(SufexprNode node){
     node.expr.accept(this);
     if (node.expr.type == null)
@@ -535,7 +536,7 @@ public class SemanticChecker implements ASTvisitor {
     }//只有类，数组，this,string有成员
     ClassdefNode classDef = "this".equals(node.obj.str)? currentScope.inclass: globalScope.classMember.get(node.obj.type.type);
 
-    if (node.obj.type.dim == 0) {
+    if (node.obj.type.dim==0 ) {
 
       if (classDef == null){
         throw new Error(node.pos, "Class " + node.obj.type.type + " does not exist");

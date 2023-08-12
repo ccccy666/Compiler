@@ -1,5 +1,16 @@
 accept
 accept
+Error: Illegal expression at 19,3
+Error: Define of array is wrong at 11,14
+accept
+Error: Type is wrong at 14,4
+accept
+Error: Illegal expression at 14,12
+accept
+Error: Illegal expression at 12,14
+Error: Define of array is wrong at 12,18
+accept
+accept
 accept
 Error: Main function is wrong at 11,0
 Error: missing '}' at 'void' at 12,1
@@ -70,3 +81,112 @@ accept
 Error: Define of array is wrong at 11,18
 accept
 Error: Type of value is wrong at 14,4
+Error: Can not use break while not in a circle at 13,4
+Error: Can not use continue while not in a circle at 13,4
+accept
+Error: Can not use continue while not in a circle at 12,4
+Error: Can not use break while not in a circle at 15,4
+accept
+accept
+Error: Function a.size does not exist at 16,4
+Error: Function a.size does not exist at 16,4
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+Error: Type of return is wrong at 14,8
+accept
+Error: Illegal expression at 16,4
+accept
+Error: Name of Constuctor A is wrong at 10,0
+accept
+Error: Return of function b is wrong at 13,4
+accept
+Error: Name of Constuctor B is wrong at 11,0
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+Error: Type of value is wrong at 12,4
+accept
+accept
+Error: Should be left value at 25,4
+Error: Type of value is wrong at 12,4
+Error: Number of Parameters is wrong at 17,8
+Error: B does not exist at 17,0
+Error: Return of function f is wrong at 17,0
+accept
+Error: Type of return is wrong at 16,4
+Error: Type of return is wrong at 22,4
+Error: Type of condition is wrong at 13,1
+Error: Type of condition is wrong at 15,4
+Error: Type of condition is wrong at 15,4
+Error: Type of condition is wrong at 13,4
+accept
+Error: Type of condition is wrong at 13,1
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+Error: Illegal expression at 37,31
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+accept
+Error: extraneous input '>' expecting {'-', '!', '~', '++', '--', '(', 'new', 'null', 'true', 'false', 'this', ID, IntConst, StringConst} at 61,24
+accept
+accept
+accept
+accept
+accept
+Error: Variable can not use the name of function at 16,13
+accept
+Error: Illegal expression at 12,1
+Error: Illegal expression at 12,1
+Error: Type is wrong at 21,0
+accept
+accept
+accept
+accept
+accept
+Error: token recognition error at: '_' at 11,8
+Error: mismatched input '123' expecting {'[', ID} at 11,8
+Error: Redefinition of variable a at 12,8
+Error: mismatched input 'int' expecting {'[', ID} at 11,8
+Error: mismatched input 'this' expecting ID at 12,9
+Error: no viable alternative at input 'intthis' at 11,4
+accept
+Error: mismatched input ';' expecting {'?', ':', '+', '-', '*', '/', '%', '<', '>', '<=', '>=', '!=', '==', '&&', '||', '<<', '>>', '&', '|', '^', '=', '++', '--', '.', '[', '('} at 12,87
+Error: Parameter type is wrong at 20,4
+accept
