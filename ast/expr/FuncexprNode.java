@@ -4,7 +4,7 @@ import ast.*;
 import utils.*;
 
 public class FuncexprNode extends ExprNode {
-  public ExprNode funcName;//其实是recurexprNode，存函数名,同时在semantic check的时候获取函数定义
+  public ExprNode funcName;//recurexprNode
   public ExprlistNode args;
 
   public FuncexprNode(Position pos, ExprNode func) {

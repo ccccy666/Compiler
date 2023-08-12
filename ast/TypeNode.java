@@ -6,7 +6,7 @@ public class TypeNode extends AstNode {
   public String type;
 public int dim = 0;
 public boolean isClass = false;
-  public TypeNode(String name) {//内置
+  public TypeNode(String name) {
     super(null);
     type=name;
   }
