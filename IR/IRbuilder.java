@@ -11,7 +11,7 @@ import ast.expr.*;
 import ast.stmt.*;
 import utils.*;
 
-public class IRbuilder implements ASTvisitor{//指令
+public class IRbuilder implements ASTvisitor{
     HashMap<String, Classtype> structTypeMap = new HashMap<>();
     // HashMap<IRRegister, Integer> arraySizeMap = new HashMap<>();
     Globalscope globalScope;
@@ -72,7 +72,8 @@ public class IRbuilder implements ASTvisitor{//指令
         node.lhs.accept(this);
         switch (node.op){
             case "&&":
-            case "||"://短路求值
+            case "||":
+                
 
                 break;
             default:

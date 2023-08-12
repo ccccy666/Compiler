@@ -27,7 +27,7 @@ public class Classtype extends Base {
   }
 
   public void calcSize() {
-    size = memberType.size() << 2; // 速度大点没事。
+    size = memberType.size() << 2; 
   }
 
   @Override
