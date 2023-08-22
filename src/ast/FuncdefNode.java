@@ -4,13 +4,15 @@ import ast.stmt.*;
 import utils.*;
 import java.util.ArrayList;
 
+import IR.*;
+
 public class FuncdefNode extends AstNode {
     
   public TypeNode returnType;
    public String name, className = null;
   public ParametersNode params = null;
   public ArrayList<StmtNode> stmts = new ArrayList<StmtNode>();
-
+  public Functionblock irFunc = null;
   public FuncdefNode(Position pos, String name) {
     super(pos);
     this.name = name;

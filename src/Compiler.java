@@ -1,8 +1,11 @@
 
 
+import java.io.FileOutputStream;
+
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import IR.*;
 import gram.MxParser.*;
 import gram.*;
 import ast.*;
@@ -15,7 +18,7 @@ import Semantic.*;
 // import java.text.MessageFormat;
 // import java.io.FileOutputStream;
 // import java.io.FileReader;
-// import java.io.PrintStream;
+  import java.io.OutputStream;
 
 public class Compiler {
       public static void main(String[] args) throws Exception {
@@ -61,7 +64,13 @@ public class Compiler {
           collector.visit(ast);
           SemanticChecker checker=new SemanticChecker(globalScope);
           checker.visit(ast);
-          System.out.print("0\n");
+          Program irProgram = new Program();
+          new IrBuilder(irProgram, globalScope).visit(ast);
+          // new IROptimizer(irProgram);
+          OutputStream irOut = System.out;//new FileOutputStream("output.ll");
+          irOut.write(irProgram.toString().getBytes());
+          irOut.close();
+          // System.out.print("0\n");
           // }catch(Error e){
           //   System.out.print(e.toString());
           //   System.out.print('\n');

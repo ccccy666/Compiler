@@ -2,7 +2,10 @@ package utils;
 
 import java.util.HashMap;
 
-
+// import IR.Functionblock;
+import IR.Functionblock;
+// import IR.Value.Register;
+import IR.Value.Register;
 import ast.*;
 import ast.stmt.*;
 import utils.*;
@@ -10,6 +13,7 @@ import utils.*;
 
 public class Scope {
   // public HashMap<String, TypeNode> prevarMember = new HashMap<>();
+  //public HashMap<String, Functionblock> IRFunc = new HashMap<>();
   public HashMap<String, midvar> varMember = new HashMap<>();
   public Scope parentScope = null;
   public ClassdefNode inclass = null;
@@ -17,7 +21,8 @@ public class Scope {
   public TypeNode returnType = null;
   public boolean circle = false, isReturned = false;
   
-
+  public HashMap<String, Register> IRVar = new HashMap<>();
+  
 
   public Scope() {}
   public Scope(Scope parentScope) {
@@ -51,7 +56,16 @@ public class Scope {
     this(parentScope);
     this.circle = isLoopScope;
   }
+  public void addIRVar(String name, Register reg) {
+    IRVar.put(name, reg);
+  }
 
+  public Register getIRVarPtr(String name) {
+    if (IRVar.containsKey(name))
+      return IRVar.get(name);
+    else
+      return parentScope != null ? parentScope.getIRVarPtr(name) : null;
+  }
   
   public TypeNode getVarType(String name) {
     if (varMember.containsKey(name))

@@ -1,1 +1,7 @@
 
+.antlr/
+.vscode/
+*.class
+*.txt
+ravel/
+test.*

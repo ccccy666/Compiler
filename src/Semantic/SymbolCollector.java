@@ -24,6 +24,7 @@ public class SymbolCollector implements ASTvisitor {
   }
 
   public void visit(FuncdefNode node) {
+    // System.out.println("888888888");
     if (globalScope.funcMember.get(node.name) != null)
       throw new Error(node.pos, "Redefinition of function " + node.name);
     if (globalScope.classMember.get(node.name) != null)
@@ -39,6 +40,7 @@ public class SymbolCollector implements ASTvisitor {
     for (var func : node.funcDefList) {
       if (node.funcMember.containsKey(func.name))
         throw new Error(func.pos, "Redefinition of function " + func.name );
+      
       func.className = node.name;
       node.funcMember.put(func.name, func);
     }

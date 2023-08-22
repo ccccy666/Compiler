@@ -2,10 +2,13 @@ package IR.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
+
 import IR.Value.*;
 
-public class Classtype extends Base {
-  public ArrayList<Base> memberType = new ArrayList<Base>();
+public class Classtype extends Basetype {
+  
+  public ArrayList<Basetype> memberType = new ArrayList<Basetype>();
   public HashMap<String, Integer> memberOffset = new HashMap<>();
   public boolean hasBuild = false;
 
@@ -13,7 +16,7 @@ public class Classtype extends Base {
     super(name, size);
   }
 
-  public void addMember(String name, Base type) {
+  public void addMember(String name, Basetype type) {
     memberType.add(type);
     memberOffset.put(name, memberType.size() - 1);
   }
@@ -22,7 +25,7 @@ public class Classtype extends Base {
     return memberOffset.containsKey(name);
   }
 
-  public Base getMemberType(String name) {
+  public Basetype getMemberType(String name) {
     return !memberOffset.containsKey(name) ? null : memberType.get(memberOffset.get(name));
   }
 
@@ -34,9 +37,9 @@ public class Classtype extends Base {
   public String toString() {
     return "%struct." + name;
   }
-
+  
   @Override
-  public int getsize() {
-    return  0;
+  public Valu defaultValue() {
+    return new Nullconst(this);
   }
 }

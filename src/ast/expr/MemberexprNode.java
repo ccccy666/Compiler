@@ -1,12 +1,13 @@
 package ast.expr;
 
+import IR.Value.*;
 import ast.*;
 import utils.*;
 
 public class MemberexprNode extends ExprNode {
   public ExprNode obj;
   public String member;
-
+  public Register objAddr;
 
   public MemberexprNode(Position pos, ExprNode obj, String member) {
     super(pos);

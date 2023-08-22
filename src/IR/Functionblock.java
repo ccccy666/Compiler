@@ -1,28 +1,26 @@
 package IR;
 
-import IR.Value.*;
+import IR.Instructions.*;
 import IR.Type.*;
-import IR.Instruction.*;
+import IR.Value.*;
 
 import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
-public class Functionblock extends Base{
+
+public class Functionblock {
   public String name;
-  public Base returnType;
-//   public ArrayList<IRRegister> params = new ArrayList<IRRegister>();
-  public LinkedList<Basicblock> blocks = new LinkedList<Basicblock>();
-//   public ArrayList<IRAllocaInst> allocaInsts = new ArrayList<IRAllocaInst>();
-
+  public Basetype returnType;
+  public Register retAddr;
   public Basicblock entryBlock, exitBlock;
-//   public IRRegister retAddr;
+  
+  public ArrayList<Alloca> allocaInsts = new ArrayList<Alloca>();
+  public ArrayList<Register> params = new ArrayList<Register>();
+  public LinkedList<Basicblock> blocks = new LinkedList<Basicblock>();
+  
 
-//   public HashMap<IRRegister, HashSet<IRInst>> useList = new HashMap<>();
 
-  public Functionblock(String name, Base returnType) {
-    super(name);
+  public Functionblock(String name, Basetype returnType) {
     this.name = name;
     this.returnType = returnType;
   }
@@ -32,32 +30,27 @@ public class Functionblock extends Base{
     return block;
   }
 
-  public void finish() {
-    entryBlock = blocks.getFirst();
-    // for (int i = allocaInsts.size() - 1; i >= 0; --i)
-    //   entryBlock.insts.addFirst(allocaInsts.get(i));
-    blocks.add(exitBlock);
-  }
-  @Override
-  public int getsize(){
-    return 0;
-  }
-  @Override
   public String toString() {
     String ret = "define " + returnType.toString() + " @" + name + "(";
-    // IRRegister.regCnt = 0;
-    // for (int i = 0; i < params.size(); ++i) {
-    //   ret += params.get(i).toStringWithType();
-    //   if (i != params.size() - 1) ret += ", ";
-    // }
+    Register.regCnt = 0;
+    for (int i = 0; i < params.size(); ++i) {
+      ret += params.get(i).toStringWithType();
+      if (i != params.size() - 1) ret += ", ";
+    }
     ret += ") {\n";
     for (Basicblock block : blocks)
       ret += block.toString();
     ret += "}\n";
     return ret;
   }
-
-  public void accept(IRvisitor visitor) {
+  public void finish() {
+    entryBlock = blocks.getFirst();
+    
+    for (int i = allocaInsts.size() - 1; i >= 0; --i)
+      entryBlock.insts.addFirst(allocaInsts.get(i));
+    blocks.add(exitBlock);
+  }
+  public void accept(IRVisitor visitor) {
     visitor.visit(this);
   }
 }

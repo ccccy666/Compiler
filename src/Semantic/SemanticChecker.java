@@ -8,7 +8,7 @@ import utils.*;
 import utils.Error;
 
 
-public class SemanticChecker implements ASTvisitor {
+public class SemanticChecker implements ASTvisitor,Elements {
 
   public Globalscope globalScope;
   public Scope currentScope;
@@ -59,6 +59,10 @@ public class SemanticChecker implements ASTvisitor {
 
   public void visit(ParametersNode node){
     for(var ele:node.units){
+      if(ele.initVal!=null){
+        
+        throw new Error(node.pos,"Parameters can not have default value");
+      }
       ele.accept(this);
     }
   };
@@ -99,12 +103,13 @@ public class SemanticChecker implements ASTvisitor {
   };
   public void visit(Variable node){
     node.type.accept(this);
-    
+    //System.out.println("888888888888");
     if(node.type.equals(new TypeNode("void"))||node.type.equals(new TypeNode("null"))||node.type.equals(new TypeNode("this"))){
       throw new Error(node.pos,"Variable can not be illegal");
     }
     if(node.initVal!=null){
       node.initVal.accept(this);
+      // if(node.initVal instanceof BasicexprNode)System.out.print(node.initVal.str+'\n');
       if(!node.initVal.type.equals(new TypeNode("null"))&&node.type.dim!=node.initVal.type.dim){
         throw new Error(node.pos,"Dim is wrong");
       }
@@ -151,7 +156,7 @@ public class SemanticChecker implements ASTvisitor {
   
   public void visit(ForstmtNode node){///////////////
     
-
+    currentScope=new Scope(currentScope,true);
     if(node.init!=null){
       node.init.accept(this);
     }
@@ -169,7 +174,7 @@ public class SemanticChecker implements ASTvisitor {
     if(node.step!=null){
       node.step.accept(this);
     }
-    currentScope=new Scope(currentScope,true);
+    
     for(var ele:node.stmts){
       ele.accept(this);
     }
@@ -348,7 +353,7 @@ public class SemanticChecker implements ASTvisitor {
   public void visit(TernaryexprNode node){
     node.lhs.accept(this);
     node.mhs.accept(this);
-    node.rhs.accept(this);
+    node.rhs.accept(this);//System.out.print("666666666");
     if (node.lhs.type == null ||node.mhs.type==null ||node.rhs.type == null){
       throw new Error(node.pos, "Illegal expression");
     }
@@ -356,7 +361,9 @@ public class SemanticChecker implements ASTvisitor {
       throw new Error(node.pos,"Type is wrong");
 
     }
+    
     if(!node.mhs.type.equals(node.rhs.type)) {
+    
       if(((!node.rhs.type.Nbasic()||!node.mhs.type.equals(new TypeNode("null")))&&(!node.mhs.type.Nbasic()||!node.rhs.type.equals(new TypeNode("null"))))){
         throw new Error(node.pos,"Type is wrong");
       }
@@ -369,6 +376,8 @@ public class SemanticChecker implements ASTvisitor {
 
   };
   public void visit(RecurexprNode node){
+    // System.out.println("55555555555");
+    
     midvar mi=currentScope.varMember.get(node.str);
     if(mi==null){
       node.type=null;
@@ -380,6 +389,7 @@ public class SemanticChecker implements ASTvisitor {
       node.funcDef = currentScope.inclass.funcMember.get(node.str);
     else
       node.funcDef = globalScope.funcMember.get(node.str);
+    // System.out.print(node.str+'\n');
   };
   
   public void visit(SufexprNode node){
@@ -409,6 +419,7 @@ public class SemanticChecker implements ASTvisitor {
     }
   };
   public void visit(AssignexprNode node){
+    
     node.lhs.accept(this);
     node.rhs.accept(this);
     
@@ -426,10 +437,12 @@ public class SemanticChecker implements ASTvisitor {
 
       throw new Error(node.pos, "Illegal expression");
     }
-    if(node.lhs.str.equals("this")){
+    
+    if(node.lhs.str!=null&&node.lhs.str.equals("this")){
 
       throw new Error(node.pos, "Illegal expression");
     } 
+    // System.out.println("sssssssssssss"+'\n');
     if (judge(node.lhs.type,node.rhs.type)){
       throw new Error(node.pos, "Type is wrong");
     }//
@@ -439,6 +452,7 @@ public class SemanticChecker implements ASTvisitor {
       throw new Error(node.pos, "Dim is wrong");
     }
     if (!node.lhs.isLeftValue()){
+      //System.out.print(node.lhs.str);
       throw new Error(node.pos, "Should be left value");
     }
       
@@ -448,24 +462,27 @@ public class SemanticChecker implements ASTvisitor {
 
   public void visit(IndexexprNode node){/////////////
     node.array.accept(this);
-    // node.index.accept(this);
-    ExprNode ex1=node.array;
+    node.index.accept(this);
+    ExprNode ex1=node.array,ex2=node.index;
+    if (ex1.type == null || ex2.type == null || !ex2.type.equals(new TypeNode("int"))){
+      throw new Error(node.pos, "Illegal expression");
+    }
     // System.out.print(ex1.str );
     // System.out.print(ex1.type.dim );
     // System.out.print(node.indexlist.size());
     // System.out.print('\n'); 
-    if(node.array.type == null ){
-      // System.out.print("666");
-      throw new Error(node.pos, "Illegal expression");
-    }
-    for(int i=0;i<node.indexlist.size();i++){
-      ExprNode ex2=node.indexlist.get(i);
-      ex2.accept(this);
-      if ( ex2.type == null || !ex2.type.equals((new TypeNode("int")))){
+    // if(node.array.type == null ){
+    //   // System.out.print("666");
+    //   throw new Error(node.pos, "Illegal expression");
+    // }
+    // for(int i=0;i<node.indexlist.size();i++){
+    //   ExprNode ex2=node.indexlist.get(i);
+    //   ex2.accept(this);
+    //   if ( ex2.type == null || !ex2.type.equals((new TypeNode("int")))){
      
-        throw new Error(node.pos, "Illegal expression");
-      }
-    }
+        
+    //   }
+    // }
     
     // node.
      
@@ -473,7 +490,7 @@ public class SemanticChecker implements ASTvisitor {
     
     
      
-    node.type = new TypeNode(null,ex1.type.type, ex1.type.dim-node.indexlist.size());
+    node.type = new TypeNode(null,ex1.type.type, ex1.type.dim-1);
     if (node.type.dim < 0){
       
       throw new Error(node.pos, "Illegal expression");
@@ -549,7 +566,7 @@ public class SemanticChecker implements ASTvisitor {
         throw new Error(node.pos, "Type is wrong");
       }
       else if (node.member.equals("size")){
-        node.funcDef = new FuncdefNode(null, new TypeNode("int"), "size", null, 0);
+        node.funcDef = ArraySizeFunc;
       }
       
     }

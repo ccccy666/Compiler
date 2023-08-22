@@ -1,11 +1,14 @@
 package ast;
 
+// import IR.Type.Basetype;
+import IR.Type.*;
 import utils.*;
 
 public class TypeNode extends AstNode {
   public String type;
 public int dim = 0;
 public boolean isClass = false;
+public Basetype irType;
   public TypeNode(String name) {
     super(null);
     type=name;

@@ -263,12 +263,15 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
   
   @Override
   public AstNode visitIndexExpr(MxParser.IndexExprContext ctx) {
-    IndexexprNode expr = new IndexexprNode(new Position(ctx), (ExprNode) visit(ctx.expr(0)));
-    List<ExprContext> list=ctx.expr();
-    for(int i=1;i<list.size();i++){
-      expr.indexlist.add((ExprNode) visit(ctx.expr(i)));
-    }
+    // IndexexprNode expr = new IndexexprNode(new Position(ctx), (ExprNode) visit(ctx.expr(0)));
+    // List<ExprContext> list=ctx.expr();
+    // for(int i=1;i<list.size();i++){
+    //   expr.indexlist.add((ExprNode) visit(ctx.expr(i)));
+    // }
     
+    // expr.str = ctx.getText();
+    // return expr;
+    var expr = new IndexexprNode(new Position(ctx), (ExprNode) visit(ctx.expr(0)), (ExprNode) visit(ctx.expr(1)));
     expr.str = ctx.getText();
     return expr;
   }
@@ -350,8 +353,9 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
   @Override
 
   public AstNode visitTernaryExpr(MxParser.TernaryExprContext ctx) {
-
-    return new TernaryexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),ctx.op1.getText(),(ExprNode) visit(ctx.expr(1)),ctx.op2.getText(),(ExprNode) visit(ctx.expr(2)));
+    TernaryexprNode te=new TernaryexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),ctx.op1.getText(),(ExprNode) visit(ctx.expr(1)),ctx.op2.getText(),(ExprNode) visit(ctx.expr(2)));
+    // System.out.print(((AssignexprNode)te.rhs).lhs.str);
+    return te;
   }
   
   /**
@@ -391,6 +395,7 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 */
   @Override
   public AstNode visitSingle(MxParser.SingleContext ctx) {
+    // System.out.print(ctx.getText()+'\n');
     return ctx.ID() == null ? new BasicexprNode(new Position(ctx), ctx.getText()) : new RecurexprNode(new Position(ctx), ctx.getText());
   }
   /**
@@ -422,7 +427,9 @@ public class ASTbuilder extends MxBaseVisitor<AstNode> {
 	 */
   @Override
   public AstNode visitAssignExpr(MxParser.AssignExprContext ctx) {
-    return new AssignexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),(ExprNode) visit(ctx.expr(1)));
+    AssignexprNode as=new AssignexprNode(new Position(ctx),(ExprNode) visit(ctx.expr(0)),(ExprNode) visit(ctx.expr(1)));
+    // System.out.println(as.lhs.str+' '+as.rhs.str+'\n');
+    return as;
   }
   /**
 	 * {@inheritDoc}

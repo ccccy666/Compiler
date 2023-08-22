@@ -1,74 +1,54 @@
 package IR;
 
-// import java.lang.ProcessBuilder.Redirect.Type;
-// import java.util.ArrayList;
 import java.util.LinkedList;
 
-import IR.*;
-import IR.Type.*;
-import IR.Instruction.*;
-import IR.Value.*;
-import utils.*;
+import IR.Instructions.*;
 
-public class Basicblock extends Base{
+public class Basicblock {
+  public static int blockCnt = 0;
   public String name;
-  public LinkedList<Ins> insts = new LinkedList<Ins>();
-//   public IRTerminalInst terminalInst = null;
+  public TerminalInst terminalInst = null;
   public Functionblock parentFunction = null;
   public int loopDepth = 0;
   public boolean isFinished = false;
-
-  public LinkedList<Basicblock> preds = new LinkedList<>(), succs = new LinkedList<>();
-  public Basicblock idom = null;
-  public LinkedList<Basicblock> domChildren = new LinkedList<>();
-  public LinkedList<Basicblock> domFrontier = new LinkedList<>();
-
-//   public LinkedList<IRPhiInst> phiInsts = new LinkedList<>();
-
-  public static int blockCnt = 0;
-
-  public Basicblock(Functionblock function, String name, int loopDepth) {
-    super(name + String.valueOf(blockCnt++));
+  public LinkedList<Ins> insts = new LinkedList<Ins>();
+  //public LinkedList<Basicblock> preds = new LinkedList<>(), succs = new LinkedList<>();
+  
+  
+  public Basicblock(Functionblock function, String name, Basicblock toBlock, int loopDepth) {
     this.parentFunction = function;
-    // this.name = 
+    this.name = name + String.valueOf(blockCnt++);
+    this.loopDepth = loopDepth;
+    this.terminalInst = new Jump(this, toBlock);
+  }
+  public Basicblock(Functionblock function, String name, int loopDepth) {
+    this.parentFunction = function;
+    this.name = name + String.valueOf(blockCnt++);
     this.loopDepth = loopDepth;
   }
-  public Basicblock(Functionblock function, String name, Basicblock toBlock, int loopDepth) {
-    this(function, name, loopDepth);
-    // this.terminalInst = new IRJumpInst(this, toBlock);
-  }
   
-  public void addInst(Ins inst) {
-    // if (inst instanceof IRPhiInst phiInst) {
-    //   for (IRPhiInst enumInst : phiInsts)
-    //     if (phiInst.src == enumInst.src)
-    //       return;
-    //   phiInsts.add((IRPhiInst) inst);
-    // } else {
-    //   if (isFinished) return;
-    //   if (inst instanceof IRAllocaInst)
-    //     parentFunction.allocaInsts.add((IRAllocaInst) inst);
-    //   else if (inst instanceof IRTerminalInst)
-    //     terminalInst = (IRTerminalInst) inst;
-    //   else
-    //     insts.add(inst);
-    // }
-  }
-  @Override
-  public int getsize(){
-    return -1;
-  }
-  @Override
+
   public String toString() {
     String ret = name + ":\n";
     for (Ins inst : insts)
       ret += "  " + inst + "\n";
-    // if (terminalInst != null)
-    //   ret += "  " + terminalInst + "\n";
+    if (terminalInst != null)
+      ret += "  " + terminalInst + "\n";
     return ret;
   }
-//   @Override
-  public void accept(IRvisitor visitor) {
+  public void addInst(Ins inst) {
+    
+      if (isFinished) return;
+      if (inst instanceof Alloca)
+        parentFunction.allocaInsts.add((Alloca) inst);
+      else if (inst instanceof TerminalInst)
+        terminalInst = (TerminalInst) inst;
+      else
+        insts.add(inst);
+    
+  }
+  public void accept(IRVisitor visitor) {
     visitor.visit(this);
   }
+
 }

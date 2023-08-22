@@ -1,5 +1,5 @@
 grammar Mx;
-
+@header{package gram;}
 program: (funcDef | classDef | varDef)* EOF;
 
 funcDef: returnType ID '(' parameterList? ')' '{' suite '}';
@@ -45,7 +45,7 @@ expr:
   |   New typeName (unit)* ('(' ')')?           #newExpr
   // | New typeName ('(' ')')?                           #newClassExpr
   |   expr op=Dot ID                         #memberExpr
-  |   expr ('[' expr ']') +                                #indexExpr 
+  |   expr '[' expr ']'                                #indexExpr 
   |   expr '(' exprList? ')'                            #funcExpr
   |   lv=expr op=('++'|'--') #sufExpr
   |   <assoc=right> op=('++'|'--'|Not|Tilde|Sub) rv=expr #preExpr

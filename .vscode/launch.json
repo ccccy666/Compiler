@@ -9,21 +9,15 @@
             "name": "Compiler",
             "request": "launch",
             "mainClass": "Compiler",
-            "projectName": "compiler_96e7b3ff"
-        },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "Main",
-            "projectName": "compiler_96e7b3ff"
+            "projectName": "compiler_96e7b3ff",
+            "args": ["<", "test.cpp"]
         },
         {
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "/home/cyf/compiler/sucklessYx-main/text.sb",
-            "grammar": "/home/cyf/compiler/Antlr/Mx.g4",
+            "input": "/home/cyf/compiler/test.cpp",
+            "grammar": "/home/cyf/compiler/src/gram/Mx.g4",
             "visualParseTree": true
         }
     ]

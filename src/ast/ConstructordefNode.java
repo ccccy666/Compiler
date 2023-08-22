@@ -18,7 +18,8 @@ public class ConstructordefNode extends AstNode {
     FuncdefNode funcDef = new FuncdefNode(pos, name);
     funcDef.returnType = new TypeNode(pos, "void");
     funcDef.stmts = suite.stmts;
-    return info = funcDef;
+    info = funcDef;
+    return info;
   }
 
   @Override

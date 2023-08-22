@@ -7,12 +7,12 @@ import utils.*;
 
 public class IndexexprNode extends ExprNode {
   public ExprNode array;
-  public ArrayList<ExprNode> indexlist=new ArrayList<>();
-
-  public IndexexprNode(Position pos, ExprNode array) {
+  // public ArrayList<ExprNode> indexlist=new ArrayList<>();
+  public ExprNode index;
+  public IndexexprNode(Position pos, ExprNode array,ExprNode index) {
     super(pos);
     this.array = array;
-    // this.indexlist = index;
+    this.index = index;
   }
 
   @Override
