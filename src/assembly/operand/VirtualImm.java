@@ -13,9 +13,7 @@ public class VirtualImm extends Reg {
       value = ((Intconst) constVal).val;
     } else if (constVal instanceof Boolconst) {
       value = ((Boolconst) constVal).val ? 1 : 0;
-    // } else if (constVal instanceof IRCondConst) {
-    //   value = ((IRCondConst) constVal).val ? 1 : 0;
-    // } 
+    
     }else {
       value = 0;
     

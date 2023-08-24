@@ -9,9 +9,13 @@ import IR.*;
 import gram.MxParser.*;
 import gram.*;
 import ast.*;
+import backend.*;
+import backend.RegAllocator;
 import utils.*;
 
 import Semantic.*;
+import assembly.ASMModule;
+
 // import java.io.BufferedReader;
 // import java.nio.file.Path;
 // import java.nio.file.Paths;
@@ -66,10 +70,20 @@ public class Compiler {
           checker.visit(ast);
           Program irProgram = new Program();
           new IrBuilder(irProgram, globalScope).visit(ast);
+          // FileOutputStream irout=new FileOutputStream("output.ll");
+          // irout.write(irProgram.toString().getBytes());
+          // irout.close();
           // new IROptimizer(irProgram);
-          OutputStream irOut = System.out;//new FileOutputStream("output.ll");
-          irOut.write(irProgram.toString().getBytes());
-          irOut.close();
+          ASMModule asmModule = new ASMModule();
+    new Instselector(asmModule).visit(irProgram);
+    new Regallocator(asmModule).work();
+    
+    // FileOutputStream out = new FileOutputStream("output.s");
+    // out.write(asmModule.toString().getBytes());
+    // out.close();
+          OutputStream Out = System.out;//new FileOutputStream("output.ll");
+          Out.write(asmModule.toString().getBytes());
+          Out.close();
           // System.out.print("0\n");
           // }catch(Error e){
           //   System.out.print(e.toString());

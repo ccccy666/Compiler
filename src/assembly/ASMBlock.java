@@ -9,9 +9,9 @@ import java.util.LinkedList;
 public class ASMBlock {///////////
   public String name; // do not print when null
   public int loopDepth = 0;
-  public LinkedList<ASMInst> insts = new LinkedList<ASMInst>();
-  public LinkedList<ASMInst> phiConvert = new LinkedList<ASMInst>();
-  public LinkedList<ASMInst> jumpOrBr = new LinkedList<ASMInst>();
+  public LinkedList<Inst> insts = new LinkedList<Inst>();
+  public LinkedList<Inst> phiConvert = new LinkedList<Inst>();
+  public LinkedList<Inst> jumpOrBr = new LinkedList<Inst>();
   public LinkedList<ASMBlock> succ = new LinkedList<ASMBlock>(), pred = new LinkedList<ASMBlock>();
   public HashSet<Reg> liveIn = new HashSet<Reg>(), liveOut = new HashSet<Reg>();
   public HashSet<Reg> use = new HashSet<Reg>(), def = new HashSet<Reg>();
@@ -21,17 +21,15 @@ public class ASMBlock {///////////
     this.loopDepth = loopDepth;
   }
 
-  public void addInst(ASMInst inst) {
-    if (inst instanceof ASMJumpInst || inst instanceof ASMBeqzInst || inst instanceof ASMBrCmpInst)
-      jumpOrBr.add(inst);
-    else
+  public void addInst(Inst inst) {
+    
       insts.add(inst);
   }
 
   public String toString() {
     String ret = "";
     if (name != null) ret += name + ":\n";
-    for (ASMInst inst : insts)
+    for (Inst inst : insts)
       ret += "  " + inst + "\n";
     return ret;
   }
@@ -39,28 +37,3 @@ public class ASMBlock {///////////
 
 
 
-// package assembly;
-
-// import assembly.inst.*;
-// import java.util.LinkedList;
-
-// public class ASMBlock {
-//   public String name; // do not print when null
-//   public LinkedList<ASMInst> insts = new LinkedList<ASMInst>();
-
-//   public ASMBlock(String name) {
-//     this.name = name;
-//   }
-
-//   public void addInst(ASMInst inst) {
-//     insts.add(inst);
-//   }
-
-//   public String toString() {
-//     String ret = "";
-//     if (name != null) ret += name + ":\n";
-//     for (ASMInst inst : insts)
-//       ret += "  " + inst + "\n";
-//     return ret;
-//   }
-// }

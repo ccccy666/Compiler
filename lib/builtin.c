@@ -86,14 +86,14 @@ int array_size(void *__this) {
     return ((int*)__this)[-1];
 }
 
-void *newPtrArray(int size) {
+void *newPtrArray(int size) {//数组元素个数
 
     int *array = malloc((size << 2) + 4);
     array[0] = size;
     return array + 1;
 }
 
-void *newClass(int size) {
+void *newClass(int size) {//字节
 
     int *cl = malloc(size );
     // array[0] = size;

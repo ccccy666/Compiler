@@ -2,10 +2,10 @@ package assembly.inst;
 
 import assembly.*;
 
-public class ASMJumpInst extends ASMInst {
+public class JumpInst extends Inst {
   public ASMBlock toBlock;
 
-  public ASMJumpInst(ASMBlock toBlock) {
+  public JumpInst(ASMBlock toBlock) {
     this.toBlock = toBlock;
   }
 

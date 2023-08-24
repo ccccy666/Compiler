@@ -2,10 +2,10 @@ package assembly.inst;
 
 import assembly.operand.*;
 
-public class ASMBinaryInst extends ASMInst {
+public class BinaryInst extends Inst {
   String op;
 
-  public ASMBinaryInst(String op, Reg rd, Reg rs1, Reg rs2) {
+  public BinaryInst(String op, Reg rd, Reg rs1, Reg rs2) {
     switch (op) {
       case "sdiv": this.op = "div"; break;
       case "srem": this.op = "rem"; break;

@@ -62,7 +62,7 @@ public class IrBuilder implements ASTvisitor,Elements{
         } else {
             program.initFunc = null;
         }
-        program.mainFunc.finish();
+        //program.mainFunc.finish();
     };
 
     // public void visit(NullNode node);
@@ -130,7 +130,8 @@ public class IrBuilder implements ASTvisitor,Elements{
         }
         
         currentScope = currentScope.parentScope;
-        if (!(currentClass == null ?  node.name :currentClass.name + "." + node.name).equals("main")) currentFunction.finish();
+        //if (!(currentClass == null ?  node.name :currentClass.name + "." + node.name).equals("main")) 
+                    currentFunction.finish();
         node.irFunc = currentFunction;
         currentFunction = null;
         currentBlock = null;
@@ -298,9 +299,7 @@ public class IrBuilder implements ASTvisitor,Elements{
             Basicblock falseBlock = new Basicblock(currentFunction, "falseBlock", currentBlock.loopDepth);
             Basicblock nextBlock = new Basicblock(currentFunction, "short.end", currentBlock.loopDepth);
             nextBlock.terminalInst = currentBlock.terminalInst;
-            currentBlock.terminalInst = node.op.equals("&&")
-                ? new Br(currentBlock, condition(node.lhs), rhsBlock, falseBlock)
-                : new Br(currentBlock, condition(node.lhs), trueBlock, rhsBlock);
+            currentBlock.terminalInst = node.op.equals("&&") ? new Br(currentBlock, condition(node.lhs), rhsBlock, falseBlock) : new Br(currentBlock, condition(node.lhs), trueBlock, rhsBlock);
             currentBlock.isFinished = true;
             currentBlock = currentFunction.appendBlock(rhsBlock);
             

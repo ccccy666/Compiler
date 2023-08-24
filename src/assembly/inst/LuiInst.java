@@ -2,8 +2,8 @@ package assembly.inst;
 
 import assembly.operand.*;
 
-public class ASMLuiInst extends ASMInst {
-  public ASMLuiInst(Reg dest, Imm imm) {
+public class LuiInst extends Inst {
+  public LuiInst(Reg dest, Imm imm) {
     this.rd = dest;
     this.imm = imm;
   }

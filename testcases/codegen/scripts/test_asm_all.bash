@@ -52,7 +52,7 @@ FAILED_TESTCASE=""
 judge_one_testcase() {
     local TESTDIR="$TEMPDIR/$2"
     mkdir -p $TESTDIR
-    ${CODEGEN_DIR}scripts/test_asm.bash "$COMPILER" $1 $BUILTIN $TESTDIR > /dev/null 2>&1
+    bash ${CODEGEN_DIR}scripts/test_asm.bash "$COMPILER" $1 $BUILTIN $TESTDIR > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         FAILED_TESTCASE="$2"
         print_red_msg "Fail to pass testcase: '$1'."

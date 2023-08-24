@@ -3,11 +3,11 @@ package assembly.inst;
 import assembly.operand.*;
 import assembly.*;
 
-public class ASMBrCmpInst extends ASMInst {
+public class BrCmpInst extends Inst {
   String op;
   ASMBlock toBlock;
 
-  public ASMBrCmpInst(String op, Reg rs1, Reg rs2, ASMBlock toBlock) {
+  public BrCmpInst(String op, Reg rs1, Reg rs2, ASMBlock toBlock) {
     this.op = op;
     this.toBlock = toBlock;
     this.rs1 = rs1;
