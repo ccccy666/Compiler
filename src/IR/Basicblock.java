@@ -12,7 +12,6 @@ public class Basicblock {
   public int loopDepth = 0;
   public boolean isFinished = false;
   public LinkedList<Ins> insts = new LinkedList<Ins>();
-  //public LinkedList<Basicblock> preds = new LinkedList<>(), succs = new LinkedList<>();
   
   
   public Basicblock(Functionblock function, String name, Basicblock toBlock, int loopDepth) {

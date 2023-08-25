@@ -10,7 +10,6 @@ import gram.MxParser.*;
 import gram.*;
 import ast.*;
 import backend.*;
-import backend.RegAllocator;
 import utils.*;
 
 import Semantic.*;
@@ -73,7 +72,7 @@ public class Compiler {
           // FileOutputStream irout=new FileOutputStream("output.ll");
           // irout.write(irProgram.toString().getBytes());
           // irout.close();
-          // new IROptimizer(irProgram);
+          
           ASMModule asmModule = new ASMModule();
     new Instselector(asmModule).visit(irProgram);
     new Regallocator(asmModule).work();
