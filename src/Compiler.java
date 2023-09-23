@@ -83,9 +83,9 @@ public class Compiler {
     new Instselector(asmModule).visit(irProgram);
     new Regallocator(asmModule).work();
     
-    // FileOutputStream out = new FileOutputStream("output.s");
-    // out.write(asmModule.toString().getBytes());
-    // out.close();
+    FileOutputStream out = new FileOutputStream("output.s");
+    out.write(asmModule.toString().getBytes());
+    out.close();
           OutputStream Out = System.out;//new FileOutputStream("output.ll");
           Out.write(asmModule.toString().getBytes());
           Out.close();

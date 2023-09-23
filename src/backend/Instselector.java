@@ -202,16 +202,19 @@ public class Instselector implements Elements, IRVisitor{
     public void visit(Phi node){
         VirtualReg tmp = new VirtualReg(node.dest.type.size);
         curBlock.addInst(new MvInst(getReg(node.dest), tmp));
+        ASMBlock tem=curBlock;
         for (int i = 0; i < node.values.size(); ++i) {
-        Valu val = node.values.get(i);
-        if (val instanceof Const && !(val instanceof Stringconst)){
-            Const constVal=(Const) val;
-            blockMap.get(node.blocks.get(i)).phiConvert.add(new LiInst(tmp, new VirtualImm(constVal)));
+            curBlock=blockMap.get(node.blocks.get(i));
+            Valu val = node.values.get(i);
+            if (val instanceof Const && !(val instanceof Stringconst)){
+                Const constVal=(Const) val;
+                blockMap.get(node.blocks.get(i)).phiConvert.add(new LiInst(tmp, new VirtualImm(constVal)));
+            }
+                
+            else
+                blockMap.get(node.blocks.get(i)).phiConvert.add(new MvInst(tmp, getReg(node.values.get(i))));
         }
-            
-        else
-            blockMap.get(node.blocks.get(i)).phiConvert.add(new MvInst(tmp, getReg(node.values.get(i))));
-        }
+        curBlock=tem;
     }
     Reg getReg(Valu entity) {
         if (entity.asmreg == null) {
@@ -220,7 +223,13 @@ public class Instselector implements Elements, IRVisitor{
             } else if (entity instanceof Const) {
                 entity.asmreg = new VirtualImm((Const) entity);
             }
-        }
+        }else if(entity.asmreg instanceof Global){
+                VirtualReg reg = new VirtualReg(4);
+                String name = ((Global) entity.asmreg).name;
+                curBlock.addInst(new LuiInst(reg, new RelocationFunc(RelocationFunc.Type.hi, name)));
+                curBlock.addInst(new UnaryInst("addi", reg, reg, new RelocationFunc(RelocationFunc.Type.lo, name)));
+                return reg;
+            }
         return entity.asmreg;
     }
     void storeReg(int size, Reg value, Reg dest, int offset) {//往dest+offset处存入value

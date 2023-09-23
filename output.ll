@@ -1,3 +1,6 @@
+@str.0 = private unnamed_addr constant [4 x i8] c"uyy\00"
+@str.2 = private unnamed_addr constant [4 x i8] c"yuv\00"
+@str.1 = private unnamed_addr constant [4 x i8] c"yuy\00"
 declare i1 @strlt(ptr, ptr)
 declare i1 @strle(ptr, ptr)
 declare i1 @strgt(ptr, ptr)
@@ -22,37 +25,35 @@ declare i32 @array_size(ptr)
 declare ptr @newPtrArray(i32)
 declare ptr @newClass(i32)
 
-define void @foo(i32 %.0, i32 %.1, i32 %.2) {
-entry0:
-  %.3 = mul i32 %.0, 1000
-  %.4 = mul i32 %.1, 10
-  %.5 = add i32 %.3, %.4
-  %.6 = add i32 %.5, %.2
-  %.7 = call ptr @toString(i32 %.6)
-  call void @println(ptr %.7)
-  %tmp.8 = icmp eq i32 %.0, 1
-  br i1 %tmp.8, label %then3, label %ifend2
-then3:
-  br label %return1
-ifend2:
-  call void @foo(i32 1, i32 %.2, i32 %.1)
-  %.9 = mul i32 %.0, 1000
-  %.10 = mul i32 %.2, 10
-  %.11 = add i32 %.9, %.10
-  %.12 = add i32 %.11, %.1
-  %.13 = call ptr @toString(i32 %.12)
-  call void @println(ptr %.13)
-  br label %return1
-return1:
-  %.14 = phi i32 [ %.2, %ifend2 ], [ %.1, %then3 ]
-  %.15 = phi i32 [ %.1, %ifend2 ], [ %.2, %then3 ]
-  %.16 = phi i32 [ %.1, %ifend2 ], [ 0, %then3 ]
-  ret void
-}
-
 define i32 @main() {
 entry0:
-  call void @foo(i32 7, i32 5, i32 3)
+  %.0 = call i32 @getInt()
+  %.1 = call i32 @getInt()
+  %.2 = call i32 @getInt()
+  %.3 = add i32 %.0, 1
+  %tmp.4 = icmp eq i32 %.3, %.1
+  br i1 %tmp.4, label %mhs2, label %rhs3
+mhs2:
+  br label %end4
+rhs3:
+  br label %end4
+end4:
+  %.5 = phi ptr [ @str.1, %rhs3 ], [ @str.0, %mhs2 ]
+  %.6 = sub i32 %.2, 1
+  %tmp.7 = icmp eq i32 %.1, %.6
+  br i1 %tmp.7, label %mhs5, label %rhs6
+mhs5:
+  br label %end7
+rhs6:
+  br label %end7
+end7:
+  %.8 = phi ptr [ @str.2, %rhs6 ], [ @str.0, %mhs5 ]
+  %.9 = call i1 @streq(ptr %.10, ptr %.8)
+  br i1 %.9, label %then9, label %ifend8
+then9:
+  call void @printlnInt(i32 %.3)
+  br label %ifend8
+ifend8:
   br label %return1
 return1:
   ret i32 0
