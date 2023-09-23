@@ -13,6 +13,18 @@ public class Basicblock {
   public boolean isFinished = false;
   public LinkedList<Ins> insts = new LinkedList<Ins>();
   
+  //use in ir_opt
+
+  //cfg
+  public LinkedList<Basicblock> preds = new LinkedList<>(), succs = new LinkedList<>();
+//dom tree
+  public Basicblock idom = null;
+  //支配的节点
+  public LinkedList<Basicblock> domChildren = new LinkedList<>();
+  //支配边界
+  public LinkedList<Basicblock> domFrontier = new LinkedList<>();
+
+  public LinkedList<Phi> phiInsts = new LinkedList<>();
   
   public Basicblock(Functionblock function, String name, Basicblock toBlock, int loopDepth) {
     this.parentFunction = function;
@@ -36,6 +48,15 @@ public class Basicblock {
     return ret;
   }
   public void addInst(Ins inst) {
+    if (inst instanceof Phi ) {
+      Phi phiInst=(Phi) inst;
+      
+      for (Phi enumInst : phiInsts)
+        if (phiInst.src == enumInst.src)
+          return;
+      phiInsts.add((Phi) inst);
+      return;
+    }
     
       if (isFinished) return;
       if (inst instanceof Alloca)

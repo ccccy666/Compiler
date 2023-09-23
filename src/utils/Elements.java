@@ -33,7 +33,10 @@ public interface Elements {
   irBoolType = new Int(1), irStringType = new Ptr(irCharType), irIntPtrType = new Ptr(irIntType), irNullType = new Ptr(irVoidType);
   
   Voidconst irVoidConst = new Voidconst();
-  
+   Nullconst irNullConst = new Nullconst();
+    // private static final Cond irTrueConst = new Cond(true), irFalseConst = new Cond(false);
+    Boolconst irBoolTrueConst = new Boolconst(true),irBoolFalseConst = new Boolconst(false);
+    Intconst Intconst0 = new Intconst(0),Intconst1 = new Intconst(1),Intconstn1 = new Intconst(-1),Intconst4 = new Intconst(4);
     //= irBoolType;
   
   

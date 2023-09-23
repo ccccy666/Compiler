@@ -22,7 +22,9 @@ public class ASMBlock {///////////
   }
 
   public void addInst(Inst inst) {
-    
+    if (inst instanceof JumpInst || inst instanceof BeqzInst || inst instanceof BrCmpInst)
+      jumpOrBr.add(inst);
+    else
       insts.add(inst);
   }
 

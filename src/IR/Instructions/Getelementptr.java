@@ -5,6 +5,7 @@ import IR.Type.*;
 import IR.Value.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class Getelementptr extends Ins {
   public Register res;
@@ -34,5 +35,26 @@ public class Getelementptr extends Ins {
   @Override
   public void accept(IRVisitor visitor) {
     visitor.visit(this);
+  }
+  @Override
+  public LinkedHashSet<Valu> getUse() {
+    LinkedHashSet<Valu> ret = new LinkedHashSet<>();
+    ret.add(ptr);
+    for (Valu index : indexList)
+      ret.add(index);
+    return ret;
+  }
+
+  @Override
+  public Register getDef() {
+    return res;
+  }
+
+  @Override
+  public void replaceUse(Valu old, Valu newOne) {
+    ptr = ptr == old ? newOne : ptr;
+    for (int i = 0; i < indexList.size(); ++i)
+      if (indexList.get(i) == old)
+        indexList.set(i, newOne);
   }
 }

@@ -26,9 +26,21 @@ public class Br extends TerminalInst {
   public void accept(IRVisitor visitor) {
     visitor.visit(this);
   }
+  
+  @Override
   public LinkedHashSet<Valu> getUse() {
     LinkedHashSet<Valu> ret = new LinkedHashSet<>();
     ret.add(cond);
     return ret;
+  }
+
+  @Override
+  public Register getDef() {
+    return null;
+  }
+
+  @Override
+  public void replaceUse(Valu old, Valu newOne) {
+    cond = cond == old ? newOne : cond;
   }
 }

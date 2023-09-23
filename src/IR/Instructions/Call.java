@@ -6,6 +6,7 @@ import IR.Value.*;
 
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class Call extends Ins {
   
@@ -48,5 +49,23 @@ public class Call extends Ins {
   @Override
   public void accept(IRVisitor visitor) {
     visitor.visit(this);
+  }
+  @Override
+  public LinkedHashSet<Valu> getUse() {
+    LinkedHashSet<Valu> ret = new LinkedHashSet<>();
+    for (Valu arg : args)
+      ret.add(arg);
+    return ret;
+  }
+
+  @Override
+  public Register getDef() {
+    return call;
+  }
+
+  @Override
+  public void replaceUse(Valu old, Valu newOne) {
+    for (int i = 0; i < args.size(); ++i)
+      args.set(i, args.get(i) == old ? newOne : args.get(i));
   }
 }

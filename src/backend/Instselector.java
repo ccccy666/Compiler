@@ -58,7 +58,7 @@ public class Instselector implements Elements, IRVisitor{
 
         for (int i = 0; i < node.params.size(); ++i)
             if (i < 8)
-                node.params.get(i).asmreg = PhysicsReg.regMap.get("a" + i);//前8个参数放在a0-a7中，取出来
+                node.params.get(i).asmreg = new VirtualReg(node.params.get(i).type.size);//前8个参数放在a0-a7中，取出来
             else
                 node.params.get(i).asmreg = new VirtualReg(4,i);//后面的参数放在虚拟寄存器中
 
@@ -71,6 +71,10 @@ public class Instselector implements Elements, IRVisitor{
             node.blocks.get(i).accept(this);
             curFunc.addBlock(curBlock);
         }
+        curFunc.entryBlock = curFunc.blocks.get(0);
+    curFunc.exitBlock = curFunc.blocks.get(curFunc.blocks.size() - 1);
+        for (int i = 0; i < node.params.size() && i < 8; ++i)
+            curFunc.entryBlock.insts.addFirst(new MvInst(node.params.get(i).asmreg, PhysicsReg.get("a" + i)));
         curFunc.virtualRegCnt = VirtualReg.cnt;
 
         curFunc.totalStack = curFunc.paramUsed + curFunc.allocaUsed + curFunc.virtualRegCnt * 4;
@@ -79,17 +83,20 @@ public class Instselector implements Elements, IRVisitor{
 
         ASMBlock entryBlock = curFunc.blocks.get(0);
         ASMBlock exitBlock = curFunc.blocks.get(curFunc.blocks.size() - 1);
-        entryBlock.insts.addFirst(new BinaryInst("add", PhysicsReg.regMap.get("sp"), PhysicsReg.regMap.get("sp"),
-            new VirtualImm(-curFunc.totalStack)));//sp往上减，开辟栈帧
-        exitBlock.insts.add(new BinaryInst("add", PhysicsReg.regMap.get("sp"), PhysicsReg.regMap.get("sp"),
-            new VirtualImm(curFunc.totalStack)));//sp往下加，释放栈帧
+        for (var block : curFunc.blocks) {
+            block.insts.addAll(block.phiConvert);
+            block.insts.addAll(block.jumpOrBr);
+          }
+        entryBlock.insts.addFirst(new BinaryInst("add", PhysicsReg.regMap.get("sp"), PhysicsReg.regMap.get("sp"),new VirtualImm(-curFunc.totalStack)));//sp往上减，开辟栈帧
+        exitBlock.insts.add(new BinaryInst("add", PhysicsReg.regMap.get("sp"), PhysicsReg.regMap.get("sp"),new VirtualImm(curFunc.totalStack)));//sp往下加，释放栈帧
         exitBlock.insts.add(new RetInst());
+        
     }
 
     public void visit(Basicblock node) {
-        node.insts.forEach(inst -> {
-            inst.accept(this);
-        });
+        for (var inst : node.insts){
+              inst.accept(this);
+          }
         node.terminalInst.accept(this);
     }
 
@@ -191,6 +198,20 @@ public class Instselector implements Elements, IRVisitor{
     public void visit(Store node) {
         //往rs1的地址处存入rs2
         storeReg(node.val.type.size, getReg(node.val), getReg(node.destAddr), 0);
+    }
+    public void visit(Phi node){
+        VirtualReg tmp = new VirtualReg(node.dest.type.size);
+        curBlock.addInst(new MvInst(getReg(node.dest), tmp));
+        for (int i = 0; i < node.values.size(); ++i) {
+        Valu val = node.values.get(i);
+        if (val instanceof Const && !(val instanceof Stringconst)){
+            Const constVal=(Const) val;
+            blockMap.get(node.blocks.get(i)).phiConvert.add(new LiInst(tmp, new VirtualImm(constVal)));
+        }
+            
+        else
+            blockMap.get(node.blocks.get(i)).phiConvert.add(new MvInst(tmp, getReg(node.values.get(i))));
+        }
     }
     Reg getReg(Valu entity) {
         if (entity.asmreg == null) {

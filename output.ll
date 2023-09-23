@@ -22,44 +22,39 @@ declare i32 @array_size(ptr)
 declare ptr @newPtrArray(i32)
 declare ptr @newClass(i32)
 
-define void @foo(i32 %.0, i32 %.1, i32 %.2, i32 %.3, i32 %.4, i32 %.5, i32 %.6, i32 %.7, i32 %.8, i32 %.9) {
+define void @foo(i32 %.0, i32 %.1, i32 %.2) {
 entry0:
-  %q.addr.10 = alloca i32
-  %w.addr.11 = alloca i32
-  %e.addr.12 = alloca i32
-  %ee.addr.13 = alloca i32
-  %r.addr.14 = alloca i32
-  %y.addr.15 = alloca i32
-  %yy.addr.16 = alloca i32
-  %yu.addr.17 = alloca i32
-  %g.addr.18 = alloca i32
-  %fff.addr.19 = alloca i32
-  %mmmm.addr.20 = alloca i32
-  store i32 %.0, ptr %q.addr.10
-  store i32 %.1, ptr %w.addr.11
-  store i32 %.2, ptr %e.addr.12
-  store i32 %.3, ptr %ee.addr.13
-  store i32 %.4, ptr %r.addr.14
-  store i32 %.5, ptr %y.addr.15
-  store i32 %.6, ptr %yy.addr.16
-  store i32 %.7, ptr %yu.addr.17
-  store i32 %.8, ptr %g.addr.18
-  store i32 %.9, ptr %fff.addr.19
-  store i32 1, ptr %mmmm.addr.20
+  %.3 = mul i32 %.0, 1000
+  %.4 = mul i32 %.1, 10
+  %.5 = add i32 %.3, %.4
+  %.6 = add i32 %.5, %.2
+  %.7 = call ptr @toString(i32 %.6)
+  call void @println(ptr %.7)
+  %tmp.8 = icmp eq i32 %.0, 1
+  br i1 %tmp.8, label %then3, label %ifend2
+then3:
+  br label %return1
+ifend2:
+  call void @foo(i32 1, i32 %.2, i32 %.1)
+  %.9 = mul i32 %.0, 1000
+  %.10 = mul i32 %.2, 10
+  %.11 = add i32 %.9, %.10
+  %.12 = add i32 %.11, %.1
+  %.13 = call ptr @toString(i32 %.12)
+  call void @println(ptr %.13)
   br label %return1
 return1:
+  %.14 = phi i32 [ %.2, %ifend2 ], [ %.1, %then3 ]
+  %.15 = phi i32 [ %.1, %ifend2 ], [ %.2, %then3 ]
+  %.16 = phi i32 [ %.1, %ifend2 ], [ 0, %then3 ]
   ret void
 }
 
 define i32 @main() {
 entry0:
-  %retval = alloca i32
-  %f.addr.0 = alloca i32
-  call void @foo(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10)
-  store i32 1, ptr %f.addr.0
+  call void @foo(i32 7, i32 5, i32 3)
   br label %return1
 return1:
-  %ret.1 = load i32, ptr %retval
-  ret i32 %ret.1
+  ret i32 0
 }
 

@@ -1,5 +1,7 @@
 package IR.Instructions;
 
+import java.util.LinkedHashSet;
+
 import IR.*;
 import IR.Value.*;
 
@@ -31,5 +33,27 @@ public class Store extends Ins {
   @Override
   public void accept(IRVisitor visitor) {
     visitor.visit(this);
+  }
+  @Override
+  public LinkedHashSet<Valu> getUse() {
+    LinkedHashSet<Valu> ret = new LinkedHashSet<>();
+    ret.add(val);
+    ret.add(destAddr);
+    return ret;
+  }
+
+  @Override
+  public Register getDef() {
+    return null;
+  }
+
+  @Override
+  public void replaceUse(Valu old, Valu newOne) {
+    if (val == old) {
+      // System.out.println("replace " + old.toStringWithType() + " with " + newOne.toStringWithType() + " in " + this.toString() + " in " + parentBlock.name);
+      val = newOne;
+    }
+    if (destAddr == old)
+      destAddr = (Register) newOne;
   }
 }

@@ -1,5 +1,7 @@
 package IR.Instructions;
 
+import java.util.LinkedHashSet;
+
 import IR.*;
 import IR.Type.*;
 import IR.Value.*;
@@ -29,6 +31,20 @@ public class Alloca extends Ins {
   @Override
   public void accept(IRVisitor visitor) {
     visitor.visit(this);
+  }
+  @Override
+  public LinkedHashSet<Valu> getUse() {
+    return new LinkedHashSet<>();
+  }
+
+  @Override
+  public Register getDef() {
+    return allocaReg;
+  }
+
+  @Override
+  public void replaceUse(Valu old, Valu newOne) {
+    // do nothing
   }
 }
 

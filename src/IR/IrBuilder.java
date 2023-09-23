@@ -1111,8 +1111,5 @@ public class IrBuilder implements ASTvisitor,Elements{
     //         intOne = new Intconst(1), intZero = new Intconst(0), minusOne = new Intconst(-1), nullValue = new Nullconst();
     
 
-    private static final Nullconst irNullConst = new Nullconst();
-    // private static final Cond irTrueConst = new Cond(true), irFalseConst = new Cond(false);
-    private static final Boolconst irBoolTrueConst = new Boolconst(true),irBoolFalseConst = new Boolconst(false);
-    private static final Intconst Intconst0 = new Intconst(0),Intconst1 = new Intconst(1),Intconstn1 = new Intconst(-1),Intconst4 = new Intconst(4);
+    
 }

@@ -6,6 +6,8 @@ import IR.Value.*;
 
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
 public class Functionblock {
@@ -18,7 +20,7 @@ public class Functionblock {
   public ArrayList<Register> params = new ArrayList<Register>();
   public LinkedList<Basicblock> blocks = new LinkedList<Basicblock>();
   
-
+public HashMap<Register, HashSet<Ins>> useList = new HashMap<>();
 
   public Functionblock(String name, Basetype returnType) {
     this.name = name;

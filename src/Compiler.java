@@ -7,9 +7,11 @@ import org.antlr.v4.runtime.tree.*;
 
 import IR.*;
 import gram.MxParser.*;
+import middleend.IROptimizer;
 import gram.*;
 import ast.*;
 import backend.*;
+import backend_.*;
 import utils.*;
 
 import Semantic.*;
@@ -69,6 +71,10 @@ public class Compiler {
           checker.visit(ast);
           Program irProgram = new Program();
           new IrBuilder(irProgram, globalScope).visit(ast);
+          new IROptimizer(irProgram);
+          // OutputStream irout = System.out;
+          // irout.write(irProgram.toString().getBytes());
+          // irout.close();
           // FileOutputStream irout=new FileOutputStream("output.ll");
           // irout.write(irProgram.toString().getBytes());
           // irout.close();
@@ -87,6 +93,8 @@ public class Compiler {
           // }catch(Error e){
           //   System.out.print(e.toString());
           //   System.out.print('\n');
+
+          //p,s,m
 
           // }
         // }
