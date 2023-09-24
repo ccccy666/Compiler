@@ -18,7 +18,7 @@ public class Program  {
 
   public Functionblock mainFunc;
   
-  public Functionblock initFunc = new Functionblock("init", new Void());
+  public Functionblock initFunc = new Functionblock("init_", new Void());
   public Basicblock initBlock = new Basicblock(initFunc, "entry", 0);
   
 
@@ -57,7 +57,7 @@ public class Program  {
     ret += "declare i1 @strle(ptr, ptr)\n";
     ret += "declare i1 @strgt(ptr, ptr)\n";
     ret += "declare i1 @strge(ptr, ptr)\n";
-    ret += "declare i1 @streq(ptr, ptr)\n";
+    ret += "declare i1 @string_equal(ptr, ptr)\n";
     ret += "declare i1 @strneq(ptr, ptr)\n";
     ret += "\ndeclare dso_local ptr @malloc(i32)\n";
     ret += "declare dso_local i32 @strlen(ptr)\n";

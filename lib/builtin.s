@@ -115,10 +115,10 @@ strge:                                  # @strge
 	.size	strge, .Lfunc_end3-strge
 	.cfi_endproc
                                         # -- End function
-	.globl	streq                           # -- Begin function streq
+	.globl	string_equal                           # -- Begin function streq
 	.p2align	2
-	.type	streq,@function
-streq:                                  # @streq
+	.type	string_equal,@function
+string_equal:                                  # @streq
 	.cfi_startproc
 # %bb.0:                                # %entry
 	addi	sp, sp, -16
@@ -140,7 +140,7 @@ streq:                                  # @streq
 	addi	sp, sp, 16
 	ret
 .Lfunc_end4:
-	.size	streq, .Lfunc_end4-streq
+	.size	string_equal, .Lfunc_end4-string_equal
 	.cfi_endproc
                                         # -- End function
 	.globl	strneq                          # -- Begin function strneq

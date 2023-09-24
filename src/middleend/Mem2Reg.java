@@ -17,6 +17,7 @@ public class Mem2Reg {//////shit
   LinkedHashSet<Register> Allocas = new LinkedHashSet<>();//可以消除的alloca
   HashMap<Register, HashSet<Basicblock>> Defs = new HashMap<>();//alloca的寄存器到有def语句的块对应
   HashMap<Register, Valu> replace = new HashMap<>();
+  HashMap<Register, Valu> replaceload = new HashMap<>();
 
   public Mem2Reg(Program program) {
     this.program = program;
@@ -136,8 +137,9 @@ public class Mem2Reg {//////shit
           for (int j = i + 1; j < block.insts.size(); ++j){
             var ins=block.insts.get(j);
             ins.replaceUse(ld.destReg, replace.get(ld.storeptr));// 用当前的 SSA 名称替换 load出来的值
+            
           }
-          
+          replaceload.put(ld.destReg, replace.get(ld.storeptr));
           
         if (block.terminalInst != null)
           block.terminalInst.replaceUse(ld.destReg, replace.get(ld.storeptr));
@@ -146,6 +148,14 @@ public class Mem2Reg {//////shit
         
       }
       if(flag){//不是alloca,store,load，正常保留
+        //inst.replaceUse(, null);
+        var uselist=inst.getUse();
+        for(var use:uselist){
+          var repla=replaceload.get(use);
+          if(repla!=null){
+            inst.replaceUse(use, repla);
+          }
+        }
         newInsts.add(inst);
       }
     }

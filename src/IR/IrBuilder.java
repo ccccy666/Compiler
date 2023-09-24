@@ -57,7 +57,7 @@ public class IrBuilder implements ASTvisitor,Elements{
             program.funcList.addFirst(program.initFunc);//函数列表的第一个
 
             Basicblock mainEntry = program.mainFunc.blocks.get(0);//
-            mainEntry.insts.addFirst(new Call(mainEntry, irVoidType, "init"));
+            mainEntry.insts.addFirst(new Call(mainEntry, irVoidType, "init_"));
             //main函数的第一个基本块中添加调用指令
         } else {
             program.initFunc = null;
@@ -231,8 +231,10 @@ public class IrBuilder implements ASTvisitor,Elements{
                     Basicblock tmpBlock = currentBlock;
                     currentFunction = program.initFunc;
                     currentBlock = program.initBlock;
+                    //System.out.print(node.varName+'\n');
                     node.initVal.accept(this);
                     storein(global, node.initVal);
+                    program.initBlock = currentBlock;//比如初始化new了个高维数组，currentblock变成end_block,需要把initblock指向end_block
                     currentFunction = tmpFunc;
                     currentBlock = tmpBlock;
                 }
@@ -460,7 +462,7 @@ public class IrBuilder implements ASTvisitor,Elements{
         } else {
             switch (node.op) {
             case "==":
-                node.value = stringCmp("streq", loadvalue(node.lhs), loadvalue(node.rhs));
+                node.value = stringCmp("string_equal", loadvalue(node.lhs), loadvalue(node.rhs));
                 break;
             case "!=":
                 node.value = stringCmp("strne", loadvalue(node.lhs), loadvalue(node.rhs));
@@ -989,6 +991,7 @@ public class IrBuilder implements ASTvisitor,Elements{
             if (rhs.value instanceof Nullconst){
                 rhs.value = new Nullconst(((Ptr) ptr.type).pointToType());
         }
+        //System.out.print(currentBlock.name+'\n');
             currentBlock.addInst(new Store(currentBlock, rhs.value, ptr));
             
         } else {

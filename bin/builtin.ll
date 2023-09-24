@@ -75,7 +75,7 @@ entry:
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local zeroext i8 @streq(ptr noundef %s, ptr noundef %t) #0 {
+define dso_local zeroext i8 @string_equal(ptr noundef %s, ptr noundef %t) #0 {
 entry:
   %s.addr = alloca ptr, align 4
   %t.addr = alloca ptr, align 4

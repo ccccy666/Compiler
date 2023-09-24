@@ -14,7 +14,7 @@ unsigned char strgt(char *s, char *t) {
 unsigned char strge(char *s, char *t) { 
   return strcmp(s, t) >= 0; }
 
-unsigned char streq(char *s, char *t) { 
+unsigned char string_equal(char *s, char *t) { 
   return strcmp(s, t) == 0; 
 }
 
