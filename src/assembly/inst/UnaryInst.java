@@ -13,8 +13,10 @@ public class UnaryInst extends Inst {
 
   public UnaryInst(String op, Reg rd, Reg rs1, Imm imm) {
     switch (op) {
-      case "shli": this.op = "slli"; break;
-      case "ashri": this.op = "srai"; break;
+      case "shli": this.op = "slli"; 
+        break;
+      case "ashri": this.op = "srai"; 
+        break;
       default: this.op = op;
     }
     this.rd = rd;

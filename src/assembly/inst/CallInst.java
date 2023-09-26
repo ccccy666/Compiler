@@ -7,7 +7,7 @@ public class CallInst extends Inst {//
   String funcName;
   
   HashSet<Reg> use = new HashSet<>();
-  static HashSet<Reg> def = new HashSet<>(PhysicsReg.callerSave);
+  static HashSet<Reg> def = new HashSet<>(PhysicsReg.caller);
 
   public CallInst(String funcName) {
     this.funcName = funcName;
@@ -17,7 +17,14 @@ public class CallInst extends Inst {//
     use.add(reg);
   }
 
-
+  @Override
+  public HashSet<Reg> Use() {
+    return use;
+  }
+  @Override
+  public HashSet<Reg> Def() {
+    return def;
+  }
 
   @Override
   public String toString() {

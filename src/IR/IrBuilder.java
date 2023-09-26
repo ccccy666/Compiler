@@ -234,7 +234,7 @@ public class IrBuilder implements ASTvisitor,Elements{
                     //System.out.print(node.varName+'\n');
                     node.initVal.accept(this);
                     storein(global, node.initVal);
-                    program.initBlock = currentBlock;//比如初始化new了个高维数组，currentblock变成end_block,需要把initblock指向end_block
+                    if(program.initBlock!=currentBlock)program.initBlock = currentBlock;//比如初始化new了个高维数组，currentblock变成end_block,需要把initblock指向end_block
                     currentFunction = tmpFunc;
                     currentBlock = tmpBlock;
                 }

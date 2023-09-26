@@ -6,11 +6,13 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
 import IR.*;
+import IRopt.*;
+import IRopt.DomTreeBuilder;
+// import IRopt.IROptimizer;
+import IRopt.Mem2Reg;
 import gram.MxParser.*;
-import middleend.IROptimizer;
 import gram.*;
 import ast.*;
-import backend.*;
 import backend_.*;
 import utils.*;
 
@@ -71,7 +73,9 @@ public class Compiler {
           checker.visit(ast);
           Program irProgram = new Program();
           new IrBuilder(irProgram, globalScope).visit(ast);
-          new IROptimizer(irProgram);
+          new CFGBuilder(irProgram).work();
+    new DomTreeBuilder(irProgram).work();
+    new Mem2Reg(irProgram).work();
           // OutputStream irout = System.out;
           // irout.write(irProgram.toString().getBytes());
           // irout.close();
@@ -80,10 +84,11 @@ public class Compiler {
           // irout.close();
           
           ASMModule asmModule = new ASMModule();
-    new Instselector(asmModule).visit(irProgram);
-    new Regallocator(asmModule).work();
+    new InstSelector(asmModule).visit(irProgram);
+    new Newallocator(asmModule).work();
     
-    // FileOutputStream out = new FileOutputStream("outpu.s");
+    
+    // FileOutputStream out = new FileOutputStream("test.s");
     // out.write(asmModule.toString().getBytes());
     // out.close();
           OutputStream Out = System.out;//new FileOutputStream("output.ll");

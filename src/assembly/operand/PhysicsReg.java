@@ -7,6 +7,18 @@ import java.util.HashSet;
 public class PhysicsReg extends Reg {////////////
   public String name;
   public int id;
+  public static PhysicsReg get(String name) {
+    return regMap.get(name);
+  }
+
+  public PhysicsReg(String name, int id) {
+    this.name = name;
+    this.id = id;
+  }
+
+  public String toString() {
+    return name;
+  }
   public static HashMap<String, PhysicsReg> regMap = new HashMap<>() {
     {
       put("zero", new PhysicsReg("zero", 0));
@@ -44,7 +56,7 @@ public class PhysicsReg extends Reg {////////////
     }
   };
 
-  public static HashSet<Reg> callerSave = new HashSet<>() {
+  public static HashSet<Reg> caller = new HashSet<>() {
     {
       add(regMap.get("ra"));
       for (int i = 0; i < 7; i++) add(regMap.get("t" + i));
@@ -52,7 +64,7 @@ public class PhysicsReg extends Reg {////////////
     }
   };
 
-  public static HashSet<Reg> calleeSave = new HashSet<>() {
+  public static HashSet<Reg> callee = new HashSet<>() {
     {
       for (int i = 0; i < 12; i++) add(regMap.get("s" + i));
     }
@@ -73,50 +85,6 @@ public class PhysicsReg extends Reg {////////////
     }
   };
 
-  public static PhysicsReg get(String name) {
-    return regMap.get(name);
-  }
-
-  public PhysicsReg(String name, int id) {
-    this.name = name;
-    this.id = id;
-  }
-
-  public String toString() {
-    return name;
-  }
+  
 }
 
-// package assembly.operand;
-
-// import java.util.HashMap;
-
-// public class PhysicsReg extends Reg {
-//   public String name;
-//   public static HashMap<String, PhysicsReg> regMap = new HashMap<>() {
-//     {
-//       put("zero", new PhysicsReg("zero"));
-//       put("ra", new PhysicsReg("ra"));
-//       put("sp", new PhysicsReg("sp"));
-//       put("t0", new PhysicsReg("t0"));
-//       put("t1", new PhysicsReg("t1"));
-//       put("t2", new PhysicsReg("t2"));
-//       put("a0", new PhysicsReg("a0"));
-//       put("a1", new PhysicsReg("a1"));
-//       put("a2", new PhysicsReg("a2"));
-//       put("a3", new PhysicsReg("a3"));
-//       put("a4", new PhysicsReg("a4"));
-//       put("a5", new PhysicsReg("a5"));
-//       put("a6", new PhysicsReg("a6"));
-//       put("a7", new PhysicsReg("a7"));
-//     }
-//   };
-
-//   public PhysicsReg(String name) {
-//     this.name = name;
-//   }
-
-//   public String toString() {
-//     return name;
-//   }
-// }

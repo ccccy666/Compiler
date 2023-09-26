@@ -15,9 +15,7 @@ public class GlobalValue extends Global {
     } else if (var.initVal instanceof Nullconst) {
       word = 0;
       size = 4;
-    } else {
-      throw new Error("GlobalValue: " + var.initVal);
-    }
+    } 
   }
 
   public String toString() {

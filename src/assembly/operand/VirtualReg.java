@@ -1,6 +1,7 @@
 package assembly.operand;
 
 public class VirtualReg extends Reg {
+  
   public int id = -1, param_idx = -1; 
   public int size;
   public static int cnt = 0;

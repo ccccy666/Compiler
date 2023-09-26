@@ -1,6 +1,6 @@
 package assembly.operand;
 
-public class Imm extends Operand {
+public class Imm {
   int value;
 
   public Imm(int value) {

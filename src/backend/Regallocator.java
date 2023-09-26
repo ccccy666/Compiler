@@ -66,8 +66,8 @@ public class Regallocator {
     } else if (src instanceof VirtualImm) {
       workList.add(new LiInst(reg, (VirtualImm) src));
     } else if (src instanceof Global) {
-      workList.add(new LuiInst(reg, new RelocationFunc(RelocationFunc.Type.hi, ((Global) src).name)));
-      workList.add(new UnaryInst("addi", reg, reg, new RelocationFunc(RelocationFunc.Type.lo, ((Global) src).name)));
+      workList.add(new LuiInst(reg, new Globalop(Globalop.Type.hi, ((Global) src).name)));
+      workList.add(new UnaryInst("addi", reg, reg, new Globalop(Globalop.Type.lo, ((Global) src).name)));
     }
   }
 

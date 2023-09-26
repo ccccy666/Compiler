@@ -1,7 +1,7 @@
 package assembly;
-
-import assembly.operand.*;
 import java.util.ArrayList;
+import assembly.operand.*;
+
 
 public class ASMModule {
   public ArrayList<GlobalValue> globalValues = new ArrayList<GlobalValue>();

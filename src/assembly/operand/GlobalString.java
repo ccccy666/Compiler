@@ -10,11 +10,7 @@ public class GlobalString extends Global {
 
   public String toString() {
     String ret = name + ":\n";
-    ret += "  .string \"" + str.replace("\\", "\\\\")
-        .replace("\n", "\\n")
-        .replace("\0", "")
-        .replace("\t", "\\t")
-        .replace("\"", "\\\"") + "\"\n";
+    ret += "  .string \"" + str.replace("\\", "\\\\").replace("\n", "\\n").replace("\0", "").replace("\t", "\\t").replace("\"", "\\\"") + "\"\n";
     return ret;
   }
 }

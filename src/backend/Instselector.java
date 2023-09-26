@@ -84,7 +84,7 @@ public class Instselector implements Elements, IRVisitor{
         ASMBlock entryBlock = curFunc.blocks.get(0);
         ASMBlock exitBlock = curFunc.blocks.get(curFunc.blocks.size() - 1);
         for (var block : curFunc.blocks) {
-            block.insts.addAll(block.phiConvert);
+            block.insts.addAll(block.phis);
             block.insts.addAll(block.jumpOrBr);
           }
         entryBlock.insts.addFirst(new BinaryInst("add", PhysicsReg.regMap.get("sp"), PhysicsReg.regMap.get("sp"),new VirtualImm(-curFunc.totalStack)));//sp往上减，开辟栈帧
@@ -208,11 +208,11 @@ public class Instselector implements Elements, IRVisitor{
             Valu val = node.values.get(i);
             if (val instanceof Const && !(val instanceof Stringconst)){
                 Const constVal=(Const) val;
-                blockMap.get(node.blocks.get(i)).phiConvert.add(new LiInst(tmp, new VirtualImm(constVal)));
+                blockMap.get(node.blocks.get(i)).phis.add(new LiInst(tmp, new VirtualImm(constVal)));
             }
                 
             else
-                blockMap.get(node.blocks.get(i)).phiConvert.add(new MvInst(tmp, getReg(node.values.get(i))));
+                blockMap.get(node.blocks.get(i)).phis.add(new MvInst(tmp, getReg(node.values.get(i))));
         }
         curBlock=tem;
     }
@@ -226,8 +226,8 @@ public class Instselector implements Elements, IRVisitor{
         }else if(entity.asmreg instanceof Global){
                 VirtualReg reg = new VirtualReg(4);
                 String name = ((Global) entity.asmreg).name;
-                curBlock.addInst(new LuiInst(reg, new RelocationFunc(RelocationFunc.Type.hi, name)));
-                curBlock.addInst(new UnaryInst("addi", reg, reg, new RelocationFunc(RelocationFunc.Type.lo, name)));
+                curBlock.addInst(new LuiInst(reg, new Globalop(Globalop.Type.hi, name)));
+                curBlock.addInst(new UnaryInst("addi", reg, reg, new Globalop(Globalop.Type.lo, name)));
                 return reg;
             }
         return entity.asmreg;
