@@ -318,7 +318,7 @@ public class Newallocator {
   Reg getAlias(Reg reg) {
     if (coalescedNodes.contains(reg)) {//并查集
       Reg regAlias = getAlias(alias.get(reg));
-      alias.put(reg, regAlias);
+      alias.put(reg, regAlias);//路径压缩
       return regAlias;
     } else return reg;
       
@@ -359,9 +359,12 @@ public class Newallocator {
 
   void SelectSpill() {
     Reg m = null;
-    for (Reg reg : spillWorkList)  // 避免选择那种由读取前面已溢出的寄存器产生的、活跃范围很小的寄存器
-      if (m == null ||  !spillList.contains(reg))//选择溢出优先级最低的
+    for (Reg reg : spillWorkList){
+      if ( !spillList.contains(reg))//选择溢出优先级最低的
         m = reg;
+        break;
+    }  
+    // 避免选择那种由读取前面已溢出的寄存器产生的、活跃范围很小的寄存器
     spillWorkList.remove(m);
     simplifyWorkList.add(m); // 看看是否是实际溢出
     freezeMoves(m);
@@ -406,11 +409,13 @@ public class Newallocator {
       ((VirtualReg) reg).stackOffset = func.paramUsed + func.allocaUsed + func.spillUsed;
       func.spillUsed += 4;
     }
-
+    visitblock(func);
+  }
+  void visitblock(ASMFunction func){
     for (var block : func.blocks) {
       newInsts = new LinkedList<>();
       for (Inst inst : block.insts) {
-        VirtualReg same = null;
+        VirtualReg mid = null;
         if (inst.rs1 != null && inst.rs1.stackOffset != null) {
           VirtualReg newReg = new VirtualReg(4);
           spillList.add(newReg);
@@ -418,7 +423,7 @@ public class Newallocator {
           if (inst.rs1 == inst.rs2)
             inst.rs2 = newReg;
           if (inst.rs1 == inst.rd)
-            same = newReg;
+            mid = newReg;//不能直接赋值，后面会进不去If
           inst.rs1 = newReg;
         }
         if (inst.rs2 != null && inst.rs2.stackOffset != null) {
@@ -426,12 +431,12 @@ public class Newallocator {
           spillList.add(newReg);
           allocateUse(newReg, (VirtualReg) inst.rs2);
           if (inst.rs2 == inst.rd)
-            same = newReg;
+            mid = newReg;
           inst.rs2 = newReg;
         }
         newInsts.add(inst);
         if (inst.rd != null && inst.rd.stackOffset != null) {
-          VirtualReg newReg = same == null ? new VirtualReg(4) : same;
+          VirtualReg newReg = mid == null ? new VirtualReg(4) : mid;
           spillList.add(newReg);
           allocateDef(newReg, (VirtualReg) inst.rd);
           inst.rd = newReg;
